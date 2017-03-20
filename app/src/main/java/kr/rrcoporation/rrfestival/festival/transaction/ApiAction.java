@@ -50,7 +50,6 @@ public class ApiAction {
         JONGHYUN_TYPE, EUNHO_TYPE
     }
 
-    // observe
     public void fetchTestApi() {
         apiService.testapi("", "")
                 .subscribeOn(Schedulers.newThread())
