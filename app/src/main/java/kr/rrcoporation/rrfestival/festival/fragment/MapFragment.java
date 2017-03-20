@@ -20,6 +20,7 @@ public class MapFragment extends CommonFragment {
 
     private LinearLayout rootLayout;
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
