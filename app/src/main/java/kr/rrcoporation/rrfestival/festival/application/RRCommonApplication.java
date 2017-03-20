@@ -1,6 +1,9 @@
-package kr.rrcoporation.rrfestival.festival.fragment;
+package kr.rrcoporation.rrfestival.festival.application;
 
 import android.app.Application;
+
+import kr.rrcoporation.rrfestival.festival.transaction.ApiAction;
+import kr.rrcoporation.rrfestival.festival.transaction.ApiManager;
 
 public class RRCommonApplication extends Application {
 
@@ -17,6 +20,8 @@ public class RRCommonApplication extends Application {
     public void onCreate() {
         super.onCreate();
         ourInstance = this;
+        ApiManager.init(this);
+        ApiAction.init(this);
     }
 
     @Override
