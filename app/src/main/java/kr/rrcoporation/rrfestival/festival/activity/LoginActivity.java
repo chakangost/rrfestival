@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import kr.rrcoporation.rrfestival.festival.R;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends CommonFragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
