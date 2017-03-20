@@ -26,6 +26,4 @@ public class CommonFragmentActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-
-
 }
