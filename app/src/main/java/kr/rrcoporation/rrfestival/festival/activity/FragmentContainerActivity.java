@@ -21,7 +21,7 @@ import kr.rrcoporation.rrfestival.festival.fragment.RandomFingerFragment;
 import kr.rrcoporation.rrfestival.festival.fragment.SettingFragment;
 import kr.rrcoporation.rrfestival.festival.view.FreezingViewPager;
 
-public class FragmentContainerActivity extends CommonFragmentActivity implements FragmentContainerBottomCallback {
+public class FragmentContainerActivity extends CommonFragmentActivity implements FragmentContainerBottomCallback, View.OnClickListener {
 
     private boolean backFlag;
     private Handler backHandler;
@@ -38,6 +38,10 @@ public class FragmentContainerActivity extends CommonFragmentActivity implements
     private TextView bottomPopulationTv;
     private TextView bottomSettingTv;
     private LinearLayout bottomLayout;
+    private LinearLayout bottomMapLayout;
+    private LinearLayout bottomFavLayout;
+    private LinearLayout bottomRandomFingerLayout;
+    private LinearLayout bottomSettingLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,6 +56,7 @@ public class FragmentContainerActivity extends CommonFragmentActivity implements
             }
         };
         initView();
+        initListener();
     }
 
     private void initView() {
@@ -64,17 +69,49 @@ public class FragmentContainerActivity extends CommonFragmentActivity implements
         bottomPopulationTv = (TextView) findViewById(R.id.bottom_population_tv);
         bottomSettingTv = (TextView) findViewById(R.id.bottom_setting_tv);
         bottomLayout = (LinearLayout) findViewById(R.id.group_bottom_layout);
+        bottomMapLayout = (LinearLayout) findViewById(R.id.bottom_map_layout);
+        bottomFavLayout = (LinearLayout) findViewById(R.id.bottom_favorite_layout);
+        bottomRandomFingerLayout = (LinearLayout) findViewById(R.id.bottom_top_population_layout);
+        bottomSettingLayout = (LinearLayout) findViewById(R.id.bottom_setting_layout);
 
-        int curFragment = getIntent().getIntExtra("FRAGMENT_ORDER", 0);
         ContainerAdapter adapter = new ContainerAdapter(getSupportFragmentManager());
         viewPager = (FreezingViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem(curFragment);
+        viewPager.setCurrentItem(0);
         viewPager.setOffscreenPageLimit(4);
         viewPager.setPagingEnabled(false);
 
         MapFragment pf = new MapFragment();
         pf.setPopulationFragmentCallback(this);
+    }
+
+    private void initListener() {
+        bottomMapLayout.setOnClickListener(this);
+        bottomFavLayout.setOnClickListener(this);
+        bottomRandomFingerLayout.setOnClickListener(this);
+        bottomSettingLayout.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()) {
+            case R.id.bottom_map_layout:
+                viewPager.setCurrentItem(0);
+                setActivedBottomTab(bottomMapImg, bottomMapTv, 0);
+                break;
+            case R.id.bottom_favorite_layout:
+                viewPager.setCurrentItem(1);
+                setActivedBottomTab(bottomFavoriteImg, bottomFavoriteTv, 1);
+                break;
+            case R.id.bottom_top_population_layout:
+                viewPager.setCurrentItem(2);
+                setActivedBottomTab(bottomPopulationImg, bottomPopulationTv, 2);
+                break;
+            case R.id.bottom_setting_layout:
+                viewPager.setCurrentItem(3);
+                setActivedBottomTab(bottomSettingImg, bottomSettingTv, 3);
+                break;
+        }
     }
 
     @Override

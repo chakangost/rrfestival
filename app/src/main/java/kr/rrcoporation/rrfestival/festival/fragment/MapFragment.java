@@ -20,11 +20,10 @@ public class MapFragment extends CommonFragment {
 
     private LinearLayout rootLayout;
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_fav, null);
+        rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_map, null);
         return rootLayout;
     }
 
