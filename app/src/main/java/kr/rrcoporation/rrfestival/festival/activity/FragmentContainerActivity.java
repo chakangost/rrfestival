@@ -46,7 +46,7 @@ public class FragmentContainerActivity extends CommonFragmentActivity implements
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_container);//test
+        setContentView(R.layout.activity_container);
         backHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
