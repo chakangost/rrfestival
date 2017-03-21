@@ -49,7 +49,7 @@ public class FragmentContainerActivity extends CommonFragmentActivity implements
         setContentView(R.layout.activity_container);
         backHandler = new Handler() {
             @Override
-            public void handleMessage(Message msg) {// test
+            public void handleMessage(Message msg) {
                 if (msg.what == 0) {
                     backFlag = false;
                 }
