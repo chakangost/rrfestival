@@ -6,13 +6,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
+import com.google.gson.Gson;
 import net.daum.mf.map.api.MapView;
 import kr.rrcoporation.rrfestival.festival.R;
 import kr.rrcoporation.rrfestival.festival.callback.FragmentContainerBottomCallback;
+import kr.rrcoporation.rrfestival.festival.model.FestivalResult;
+import kr.rrcoporation.rrfestival.festival.transaction.ApiManager;
+import kr.rrcoporation.rrfestival.festival.transaction.ApiService;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class MapFragment extends CommonFragment {
 
     private static FragmentContainerBottomCallback fragmentContainerBottomCallback;
+    private String serviceKey = "n4HqoC9EFsrq1stLyXelZtz4GPjTgjinWix/IT93c9Vr3bP+WA+zgOirr0AmIaGnSGkCiWgHV0YajENvv9vY6w==";
 
     public void setPopulationFragmentCallback(FragmentContainerBottomCallback fragmentContainerBottomCallback) {
         MapFragment.fragmentContainerBottomCallback = fragmentContainerBottomCallback;
@@ -24,11 +34,39 @@ public class MapFragment extends CommonFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_map, null);
+        initMapSetting();
+        fetchFestivalData();
+        return rootLayout;
+    }
+
+    private void initMapSetting() {
         MapView mapView = new MapView(getActivity());
         mapView.setDaumMapApiKey(getString(R.string.daum_api_key));
         ViewGroup mapViewContainer = (ViewGroup) rootLayout.findViewById(R.id.map_view);
         mapViewContainer.addView(mapView);
-        return rootLayout;
     }
 
+    private void fetchFestivalData() {
+        ApiService apiService = ApiManager.apiService;
+        Observable<FestivalResult> festivalData = apiService.fetchFestivalData(serviceKey, "1", "ETC", "AppTesting", "json", "1000", "A02");
+        festivalData.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<FestivalResult>() {
+                    @Override
+                    public void onNext(FestivalResult festivalResult) {
+                        Gson gson = new Gson();
+                        Toast.makeText(getActivity(), "result : " + gson.toJson(festivalResult.getResponse().getBody().getItems().getItem()[0]), Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onCompleted() {
+
+                    }
+                });
+    }
 }
