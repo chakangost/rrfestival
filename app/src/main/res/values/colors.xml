@@ -38,4 +38,13 @@
     <color name="popup_modify_favorite_activate_text">#29B07D</color>
     <color name="popup_modify_favorite_background">#F2F2F2</color>
     <color name="toast_favorite_default_text">#333333</color>
+
+    <color name="authui_colorPrimary">#3E50B4</color>
+    <color name="authui_colorPrimaryDark">#2F3E9E</color>
+    <color name="authui_colorAccent">#3E50B4</color>
+    <color name="authui_inputTextColor">#FFFFFF</color>
+    <color name="authui_inputTextColorDark">#000000</color>
+
+    <color name="errorColor">#DD2C00</color>
+    <color name="linkColor">#4285F4</color>
 </resources>
