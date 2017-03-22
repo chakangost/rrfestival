@@ -4,5 +4,5 @@
     <string name="network_connect_retry">네트워크에 연결할 수 없습니다. 네트워크 상태를 확인 후 다시 시도해 주세요.</string>
     <string name="network_connect_finish">네트워크에 연결할 수 없습니다. 네트워크 상태를 확인 후 어플리케이션을 재실행 해주세요..</string>
     <string name="network_connect_fail">네트워크 연결 실패</string>
-
+    <string name="daum_api_key">f89942d15fc136c89b950e93bfdac258</string>
 </resources>
