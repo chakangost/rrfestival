@@ -1,14 +1,15 @@
-package kr.rrcoporation.rrfestival.festival.util;
+package kr.rrcoporation.rrfestival.festival.util.helper;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
-import android.support.annotation.RestrictTo;
 import android.support.v4.app.Fragment;
 import android.view.ContextThemeWrapper;
 
 import kr.rrcoporation.rrfestival.festival.model.ExtraConstants;
+import kr.rrcoporation.rrfestival.festival.util.BaseHelper;
+import kr.rrcoporation.rrfestival.festival.util.FlowParameters;
 
 public class FragmentHelper extends BaseHelper {
     private Fragment mFragment;

@@ -14,22 +14,31 @@
 
 package kr.rrcoporation.rrfestival.festival.provider;
 
-import android.support.annotation.Nullable;
-
-import com.google.firebase.auth.AuthCredential;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 
 import kr.rrcoporation.rrfestival.festival.model.IdpResponse;
 
-public final class AuthCredentialHelper {
-    @Nullable
-    public static AuthCredential getAuthCredential(IdpResponse idpResponse) {
-//        switch (idpResponse.getProviderType()) {
-//            case GoogleAuthProvider.PROVIDER_ID:
-//                return GoogleProvider.createAuthCredential(idpResponse);
-//            case FacebookAuthProvider.PROVIDER_ID:
-//                return FacebookProvider.createAuthCredential(idpResponse);
-//            default:
-                return null;
-//        }
+public interface AuthProvider {
+
+    /**
+     * Retrieves the name of the IDP, for display on-screen.
+     */
+    String getName(Context context);
+
+    String getProviderId();
+
+    void setAuthenticationCallback(AuthCallback callback);
+
+    void onActivityResult(int requestCode, int resultCode, Intent data);
+
+    void startLogin(Activity activity);
+
+    interface AuthCallback {
+        void onSuccess(IdpResponse idpResponse);
+
+        void onFailure(Bundle extra);
     }
 }

@@ -1,4 +1,4 @@
-package kr.rrcoporation.rrfestival.festival.util;
+package kr.rrcoporation.rrfestival.festival.util.helper;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;

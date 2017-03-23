@@ -17,100 +17,64 @@ package kr.rrcoporation.rrfestival.festival.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.View;
+import android.widget.Button;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import kr.rrcoporation.rrfestival.festival.R;
 import kr.rrcoporation.rrfestival.festival.provider.IdpProvider;
-import kr.rrcoporation.rrfestival.festival.util.AuthUI;
+import kr.rrcoporation.rrfestival.festival.util.helper.AuthHelper;
 
-public class AuthActivity extends CommonFragmentActivity {
+public class AuthActivity extends CommonFragmentActivity implements View.OnClickListener {
     private static final String TAG = "AuthMethodPicker";
     private static final int RC_EMAIL_FLOW = 2;
     private static final int RC_ACCOUNT_LINK = 3;
 
+    private AuthHelper mAuthHelper;
     private ArrayList<IdpProvider> mIdpProviders;
+    private Button mSignInGoogleButton;
+    private Button mSignInFacebookButton;
+
     @Nullable
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
-//        mSaveSmartLock = mActivityHelper.getSaveSmartLockInstance();
-//        findViewById(R.id.email_provider).setOnClickListener(this);
-//
-//        populateIdpList(mActivityHelper.getFlowParams().providerInfo);
-//
-//        int logoId = mActivityHelper.getFlowParams().logoId;
-//        if (logoId == AuthUI.NO_LOGO) {
-//            findViewById(R.id.logo_layout).setVisibility(View.GONE);
-//        } else {
-//            ImageView logo = (ImageView) findViewById(R.id.logo);
-//            logo.setImageResource(logoId);
-//        }
+
+        initialize();
+
     }
 
-    private void populateIdpList(List<AuthUI.IdpConfig> providers) {
-//        mIdpProviders = new ArrayList<>();
-//        for (AuthUI.IdpConfig idpConfig : providers) {
-//            switch (idpConfig.getProviderId()) {
-//                case AuthUI.GOOGLE_PROVIDER:
-//                    mIdpProviders.add(new GoogleProvider(this, idpConfig));
-//                    break;
-//                case AuthUI.FACEBOOK_PROVIDER:
-//                    mIdpProviders.add(new FacebookProvider(
-//                            this, idpConfig, mActivityHelper.getFlowParams().themeId));
-//                    break;
-//                case AuthUI.TWITTER_PROVIDER:
-//                    mIdpProviders.add(new TwitterProvider(this));
-//                    break;
-//                case AuthUI.EMAIL_PROVIDER:
-//                    findViewById(R.id.email_provider).setVisibility(View.VISIBLE);
-//                    break;
-//                default:
-//                    Log.e(TAG, "Encountered unknown IDPProvider parcel with type: "
-//                            + idpConfig.getProviderId());
-//            }
-//        }
-//
-//        ViewGroup btnHolder = (ViewGroup) findViewById(R.id.btn_holder);
-//        for (final IdpProvider provider : mIdpProviders) {
-//            View loginButton = null;
-//            switch (provider.getProviderId()) {
-//                case GoogleAuthProvider.PROVIDER_ID:
-//                    loginButton = getLayoutInflater()
-//                            .inflate(R.layout.idp_button_google, btnHolder, false);
-//                    break;
-//                case FacebookAuthProvider.PROVIDER_ID:
-//                    loginButton = getLayoutInflater()
-//                            .inflate(R.layout.idp_button_facebook, btnHolder, false);
-//                    break;
-//                case TwitterAuthProvider.PROVIDER_ID:
-//                    loginButton = getLayoutInflater()
-//                            .inflate(R.layout.idp_button_twitter, btnHolder, false);
-//                    break;
-//                default:
-//                    Log.e(TAG, "No button for provider " + provider.getProviderId());
-//            }
-//
-//            if (loginButton != null) {
-//                loginButton.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        mActivityHelper.showLoadingDialog(R.string.progress_dialog_loading);
-//                        provider.startLogin(AuthMethodPickerActivity.this);
-//                    }
-//                });
-//                provider.setAuthenticationCallback(this);
-//                btnHolder.addView(loginButton, 0);
-//            }
-//        }
+    private void initialize() {
+        initializeField();
+        initializeListener();
+    }
+
+    private void initializeListener() {
+        mSignInGoogleButton.setOnClickListener(this);
+        mSignInFacebookButton.setOnClickListener(this);
+    }
+
+    private void initializeField() {
+        mAuthHelper = AuthHelper.getInstance(this);
+
+        mSignInGoogleButton = (Button) findViewById(R.id.button_google);
+        mSignInFacebookButton = (Button) findViewById(R.id.button_facebook);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        switch ( requestCode ) {
+            case AuthHelper.SIGN_IN_GOOGLE_ACCOUNT :
+            case AuthHelper.SIGN_IN_FACEBOOK_ACCOUNT :
+                mAuthHelper.onActivityResult(requestCode, resultCode, data);
+                break;
+        }
+
 //        if (requestCode == RC_EMAIL_FLOW) {
 //            if (resultCode == ResultCodes.OK) {
 //                finish(ResultCodes.OK, data);
@@ -119,7 +83,7 @@ public class AuthActivity extends CommonFragmentActivity {
 //            finish(resultCode, data);
 //        } else {
 //            for (IdpProvider provider : mIdpProviders) {
-//                provider.onActivityResult(requestCode, resultCode, data);
+//                mAuthHelper.onActivityResult(requestCode, resultCode, data);
 //            }
 //        }
     }
@@ -134,5 +98,19 @@ public class AuthActivity extends CommonFragmentActivity {
 //                }
 //            }
 //        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+
+        switch ( id ) {
+            case R.id.button_google :
+                mAuthHelper.signIn(AuthHelper.SIGN_IN_GOOGLE_ACCOUNT);
+                break;
+            case R.id.button_facebook :
+                mAuthHelper.signIn(AuthHelper.SIGN_IN_FACEBOOK_ACCOUNT);
+                break;
+        }
     }
 }

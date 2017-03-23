@@ -1,4 +1,4 @@
-package kr.rrcoporation.rrfestival.festival.util;
+package kr.rrcoporation.rrfestival.festival.util.helper;
 
 import android.app.Activity;
 import android.app.Dialog;

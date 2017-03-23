@@ -17,13 +17,8 @@
 
         <include
             layout="@layout/button_google"/>
-
-        <Button
-            android:id="@+id/email_provider"
-            style="@style/FirebaseUI.Button.AccountChooser.EmailButton"
-            android:text="@string/sign_in_with_email"
-            android:visibility="gone"
-            tools:visibility="visible"/>
+        <include
+            layout="@layout/button_facebook"/>
 
     </LinearLayout>
 

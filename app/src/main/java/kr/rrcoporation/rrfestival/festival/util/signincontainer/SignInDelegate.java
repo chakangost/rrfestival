@@ -30,8 +30,8 @@ import kr.rrcoporation.rrfestival.festival.model.ExtraConstants;
 import kr.rrcoporation.rrfestival.festival.model.ResultCodes;
 import kr.rrcoporation.rrfestival.festival.util.AuthUI;
 import kr.rrcoporation.rrfestival.festival.util.FlowParameters;
-import kr.rrcoporation.rrfestival.festival.util.FragmentHelper;
-import kr.rrcoporation.rrfestival.festival.util.GoogleApiHelper;
+import kr.rrcoporation.rrfestival.festival.util.helper.FragmentHelper;
+import kr.rrcoporation.rrfestival.festival.util.helper.GoogleApiHelper;
 
 
 public class SignInDelegate extends SmartLockBase<CredentialRequestResult> {

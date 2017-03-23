@@ -22,7 +22,6 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
-import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.FragmentActivity;
 
 import com.google.android.gms.tasks.Task;
@@ -30,7 +29,6 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.TwitterAuthProvider;
 
@@ -57,34 +55,11 @@ import kr.rrcoporation.rrfestival.festival.R;
  */
 public class AuthUI {
 
-    /**
-     * Provider identifier for email and password credentials, for use with
-     * {@link SignInIntentBuilder#setProviders}.
-     */
     public static final String EMAIL_PROVIDER = EmailAuthProvider.PROVIDER_ID;
-
-    /**
-     * Provider identifier for Google, for use with {@link SignInIntentBuilder#setProviders}.
-     */
     public static final String GOOGLE_PROVIDER = GoogleAuthProvider.PROVIDER_ID;
-
-    /**
-     * Provider identifier for Facebook, for use with {@link SignInIntentBuilder#setProviders}.
-     */
     public static final String FACEBOOK_PROVIDER = FacebookAuthProvider.PROVIDER_ID;
-
-    /**
-     * Provider identifier for Twitter, for use with {@link SignInIntentBuilder#setProviders}.
-     */
     public static final String TWITTER_PROVIDER = TwitterAuthProvider.PROVIDER_ID;
-
-    /**
-     */
     public static final int NO_LOGO = -1;
-
-    /**
-     * The set of authentication providers supported in Firebase Auth UI.
-     */
     public static final Set<String> SUPPORTED_PROVIDERS =
             Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
                     EMAIL_PROVIDER,
