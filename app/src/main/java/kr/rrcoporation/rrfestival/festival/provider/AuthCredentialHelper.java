@@ -19,7 +19,6 @@ import android.support.annotation.Nullable;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.auth.TwitterAuthProvider;
 
 import kr.rrcoporation.rrfestival.festival.model.IdpResponse;
 

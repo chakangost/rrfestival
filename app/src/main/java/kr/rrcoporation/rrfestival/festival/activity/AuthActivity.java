@@ -14,27 +14,15 @@
 
 package kr.rrcoporation.rrfestival.festival.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.RestrictTo;
-import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-
-import com.google.firebase.auth.AuthCredential;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import kr.rrcoporation.rrfestival.festival.R;
-import kr.rrcoporation.rrfestival.festival.model.IdpResponse;
-import kr.rrcoporation.rrfestival.festival.provider.FacebookProvider;
-import kr.rrcoporation.rrfestival.festival.provider.GoogleProvider;
 import kr.rrcoporation.rrfestival.festival.provider.IdpProvider;
-import kr.rrcoporation.rrfestival.festival.provider.TwitterProvider;
 import kr.rrcoporation.rrfestival.festival.util.AuthUI;
 
 public class AuthActivity extends CommonFragmentActivity {
