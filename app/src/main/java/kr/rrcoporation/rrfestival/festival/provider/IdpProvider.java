@@ -19,6 +19,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import kr.rrcoporation.rrfestival.festival.model.IdpResponse;
+
 public interface IdpProvider {
 
     /**

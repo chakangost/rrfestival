@@ -21,7 +21,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RestrictTo;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -29,13 +28,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.firebase.ui.auth.IdpResponse;
-import com.firebase.ui.auth.R;
-import com.firebase.ui.auth.ResultCodes;
-import com.firebase.ui.auth.ui.FlowParameters;
-import com.firebase.ui.auth.ui.FragmentHelper;
-import com.firebase.ui.auth.util.GoogleApiHelper;
-import com.firebase.ui.auth.util.PlayServicesHelper;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.credentials.Credential;
 import com.google.android.gms.common.ConnectionResult;
@@ -43,16 +35,23 @@ import com.google.android.gms.common.api.GoogleApiClient.Builder;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseUser;
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+import kr.rrcoporation.rrfestival.festival.R;
+import kr.rrcoporation.rrfestival.festival.model.IdpResponse;
+import kr.rrcoporation.rrfestival.festival.model.ResultCodes;
+import kr.rrcoporation.rrfestival.festival.util.FlowParameters;
+import kr.rrcoporation.rrfestival.festival.util.FragmentHelper;
+import kr.rrcoporation.rrfestival.festival.util.GoogleApiHelper;
+import kr.rrcoporation.rrfestival.festival.util.PlayServicesHelper;
+
 public class SaveSmartLock extends SmartLockBase<Status> {
     private static final String TAG = "SaveSmartLock";
     private static final int RC_SAVE = 100;
     private static final int RC_UPDATE_SERVICE = 28;
 
-    private String mName;
-    private String mEmail;
-    private String mPassword;
-    private String mProfilePictureUri;
+    private String      mName;
+    private String      mEmail;
+    private String      mPassword;
+    private String      mProfilePictureUri;
     private IdpResponse mResponse;
 
     @Nullable
@@ -175,7 +174,8 @@ public class SaveSmartLock extends SmartLockBase<Status> {
     }
 
     private void finish() {
-        finish(ResultCodes.OK, IdpResponse.getIntent(mResponse));
+
+//        finish(ResultCodes.OK, IdpResponse.getIntent(mResponse));
     }
 
     /**

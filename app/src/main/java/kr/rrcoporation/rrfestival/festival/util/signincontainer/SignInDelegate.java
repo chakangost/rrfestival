@@ -152,10 +152,10 @@ public class SignInDelegate extends SmartLockBase<CredentialRequestResult> {
 //                finish(resultCode, data);
                 break;
             default:
-                IdpSignInContainer signInContainer = IdpSignInContainer.getInstance(getActivity());
-                if (signInContainer != null) {
-                    signInContainer.onActivityResult(requestCode, resultCode, data);
-                }
+//                IdpSignInContainer signInContainer = IdpSignInContainer.getInstance(getActivity());
+//                if (signInContainer != null) {
+//                    signInContainer.onActivityResult(requestCode, resultCode, data);
+//                }
         }
     }
 
