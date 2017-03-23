@@ -26,7 +26,7 @@ public class FragmentContainerActivity extends CommonFragmentActivity implements
     private Handler backHandler;
     private int MAX_PAGE=4;
     private FreezingViewPager viewPager;
-    private Fragment[] fragments = {new MapFragment(), new FavFragment(), new RandomFingerFragment(), new SettingFragment()};
+    private Fragment[] fragments = {new RandomFingerFragment(), new FavFragment(), new MapFragment(), new SettingFragment()};
     private int[] bottomBarImgs = {R.drawable.tab_map_on, R.drawable.tab_like_on, R.drawable.tab_popu_on, R.drawable.tab_sett_on};
     private ImageView bottomMapImg;
     private ImageView bottomFavoriteImg;
