@@ -5,57 +5,35 @@ import android.content.IntentSender;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RestrictTo;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.auth.IdpResponse;
-import com.firebase.ui.auth.R;
-import com.firebase.ui.auth.ResultCodes;
-import com.firebase.ui.auth.ui.ExtraConstants;
-import com.firebase.ui.auth.ui.FlowParameters;
-import com.firebase.ui.auth.ui.FragmentHelper;
-import com.firebase.ui.auth.ui.TaskFailureLogger;
-import com.firebase.ui.auth.ui.User;
-import com.firebase.ui.auth.ui.email.RegisterEmailActivity;
-import com.firebase.ui.auth.ui.idp.AuthMethodPickerActivity;
-import com.firebase.ui.auth.util.GoogleApiHelper;
-import com.firebase.ui.auth.util.GoogleSignInHelper;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.credentials.Credential;
 import com.google.android.gms.auth.api.credentials.CredentialRequest;
 import com.google.android.gms.auth.api.credentials.CredentialRequestResult;
-import com.google.android.gms.auth.api.credentials.IdentityProviders;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FacebookAuthProvider;
-import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.TwitterAuthProvider;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Attempts to acquire a credential from Smart Lock for Passwords to sign in
- * an existing account. If this succeeds, an attempt is made to sign the user in
- * with this credential. If it does not, the
- * {@link AuthMethodPickerActivity authentication method picker activity}
- * is started, unless only email is supported, in which case the
- * {@link RegisterEmailActivity} is started.
- */
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+import kr.rrcoporation.rrfestival.festival.R;
+import kr.rrcoporation.rrfestival.festival.model.ExtraConstants;
+import kr.rrcoporation.rrfestival.festival.model.ResultCodes;
+import kr.rrcoporation.rrfestival.festival.util.AuthUI;
+import kr.rrcoporation.rrfestival.festival.util.FlowParameters;
+import kr.rrcoporation.rrfestival.festival.util.FragmentHelper;
+import kr.rrcoporation.rrfestival.festival.util.GoogleApiHelper;
+
+
 public class SignInDelegate extends SmartLockBase<CredentialRequestResult> {
     private static final String TAG = "SignInDelegate";
     private static final int RC_CREDENTIALS_READ = 2;
@@ -171,7 +149,7 @@ public class SignInDelegate extends SmartLockBase<CredentialRequestResult> {
             case RC_IDP_SIGNIN:
             case RC_AUTH_METHOD_PICKER:
             case RC_EMAIL_FLOW:
-                finish(resultCode, data);
+//                finish(resultCode, data);
                 break;
             default:
                 IdpSignInContainer signInContainer = IdpSignInContainer.getInstance(getActivity());
@@ -232,26 +210,6 @@ public class SignInDelegate extends SmartLockBase<CredentialRequestResult> {
 
     private void startAuthMethodChoice() {
         List<AuthUI.IdpConfig> idpConfigs = mHelper.getFlowParams().providerInfo;
-
-        // If the only provider is Email, immediately launch the email flow. Otherwise, launch
-        // the auth method picker screen.
-        if (idpConfigs.size() == 1) {
-            if (idpConfigs.get(0).getProviderId().equals(EmailAuthProvider.PROVIDER_ID)) {
-                startActivityForResult(
-                        RegisterEmailActivity.createIntent(getContext(), mHelper.getFlowParams()),
-                        RC_EMAIL_FLOW);
-            } else {
-                redirectToIdpSignIn(null,
-                                    providerIdToAccountType(idpConfigs.get(0).getProviderId()));
-            }
-        } else {
-            startActivityForResult(
-                    AuthMethodPickerActivity.createIntent(
-                            getContext(),
-                            mHelper.getFlowParams()),
-                    RC_AUTH_METHOD_PICKER);
-        }
-        mHelper.dismissDialog();
     }
 
     /**
@@ -261,31 +219,31 @@ public class SignInDelegate extends SmartLockBase<CredentialRequestResult> {
      * auth method picker flow.
      */
     private void signInWithEmailAndPassword(final String email, String password) {
-        mHelper.getFirebaseAuth()
-                .signInWithEmailAndPassword(email, password)
-                .addOnFailureListener(new TaskFailureLogger(
-                        TAG, "Error signing in with email and password"))
-                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                    @Override
-                    public void onSuccess(AuthResult authResult) {
-                        finish(ResultCodes.OK,
-                               IdpResponse.getIntent(new IdpResponse(EmailAuthProvider.PROVIDER_ID,
-                                                                     email)));
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        if (e instanceof FirebaseAuthInvalidUserException) {
-                            // In this case the credential saved in SmartLock was not
-                            // a valid credential, we should delete it from SmartLock
-                            // before continuing.
-                            deleteCredentialAndRedirect();
-                        } else {
-                            startAuthMethodChoice();
-                        }
-                    }
-                });
+//        mHelper.getFirebaseAuth()
+//                .signInWithEmailAndPassword(email, password)
+//                .addOnFailureListener(new TaskFailureLogger(
+//                        TAG, "Error signing in with email and password"))
+//                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+//                    @Override
+//                    public void onSuccess(AuthResult authResult) {
+//                        finish(ResultCodes.OK,
+//                               IdpResponse.getIntent(new IdpResponse(EmailAuthProvider.PROVIDER_ID,
+//                                                                     email)));
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        if (e instanceof FirebaseAuthInvalidUserException) {
+//                            // In this case the credential saved in SmartLock was not
+//                            // a valid credential, we should delete it from SmartLock
+//                            // before continuing.
+//                            deleteCredentialAndRedirect();
+//                        } else {
+//                            startAuthMethodChoice();
+//                        }
+//                    }
+//                });
     }
 
     /**
@@ -299,47 +257,47 @@ public class SignInDelegate extends SmartLockBase<CredentialRequestResult> {
             return;
         }
 
-        GoogleSignInHelper.getInstance(getActivity())
-                .delete(mCredential)
-                .addOnCompleteListener(new OnCompleteListener<Status>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Status> task) {
-                        if (!task.isSuccessful()) {
-                            Log.w(TAG, "deleteCredential:failure", task.getException());
-                        }
-                        startAuthMethodChoice();
-                    }
-                });
+//        GoogleSignInHelper.getInstance(getActivity())
+//                .delete(mCredential)
+//                .addOnCompleteListener(new OnCompleteListener<Status>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<Status> task) {
+//                        if (!task.isSuccessful()) {
+//                            Log.w(TAG, "deleteCredential:failure", task.getException());
+//                        }
+//                        startAuthMethodChoice();
+//                    }
+//                });
     }
 
     private void redirectToIdpSignIn(String email, String accountType) {
         if (TextUtils.isEmpty(accountType)) {
-            startActivityForResult(
-                    RegisterEmailActivity.createIntent(
-                            getContext(),
-                            mHelper.getFlowParams(),
-                            email),
-                    RC_EMAIL_FLOW);
+//            startActivityForResult(
+//                    RegisterEmailActivity.createIntent(
+//                            getContext(),
+//                            mHelper.getFlowParams(),
+//                            email),
+//                    RC_EMAIL_FLOW);
             return;
         }
 
-        if (accountType.equals(IdentityProviders.GOOGLE)
-                || accountType.equals(IdentityProviders.FACEBOOK)
-                || accountType.equals(IdentityProviders.TWITTER)) {
-            IdpSignInContainer.signIn(
-                    getActivity(),
-                    mHelper.getFlowParams(),
-                    new User.Builder(email)
-                            .setProvider(accountTypeToProviderId(accountType))
-                            .build());
-        } else {
-            Log.w(TAG, "unknown provider: " + accountType);
-            startActivityForResult(
-                    AuthMethodPickerActivity.createIntent(
-                            getContext(),
-                            mHelper.getFlowParams()),
-                    RC_IDP_SIGNIN);
-            mHelper.dismissDialog();
-        }
+//        if (accountType.equals(IdentityProviders.GOOGLE)
+//                || accountType.equals(IdentityProviders.FACEBOOK)
+//                || accountType.equals(IdentityProviders.TWITTER)) {
+//            IdpSignInContainer.signIn(
+//                    getActivity(),
+//                    mHelper.getFlowParams(),
+//                    new User.Builder(email)
+//                            .setProvider(accountTypeToProviderId(accountType))
+//                            .build());
+//        } else {
+//            Log.w(TAG, "unknown provider: " + accountType);
+//            startActivityForResult(
+//                    AuthMethodPickerActivity.createIntent(
+//                            getContext(),
+//                            mHelper.getFlowParams()),
+//                    RC_IDP_SIGNIN);
+//            mHelper.dismissDialog();
+//        }
     }
 }
