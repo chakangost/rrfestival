@@ -106,10 +106,10 @@ public class AuthActivity extends CommonFragmentActivity implements View.OnClick
 
         switch ( id ) {
             case R.id.button_google :
-                mAuthHelper.signIn(AuthHelper.SIGN_IN_GOOGLE_ACCOUNT);
+                mAuthHelper.signIn();
                 break;
             case R.id.button_facebook :
-                mAuthHelper.signIn(AuthHelper.SIGN_IN_FACEBOOK_ACCOUNT);
+                mAuthHelper.signOut();
                 break;
         }
     }

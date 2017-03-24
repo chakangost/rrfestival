@@ -47,8 +47,10 @@ public final class AuthHelper implements FirebaseAuth.AuthStateListener,
     private Context                   mContext;
     private GoogleApiClient           mGoogleApiClient;
     private AuthProvider.AuthCallback mCallback;
-    private FirebaseAuth              mFirbaseAuth;
-    private int mType;
+    private FirebaseAuth              mFirebaseAuth;
+
+    private boolean isInitialized = false;
+
 
     private AuthHelper() {
     }
@@ -64,48 +66,31 @@ public final class AuthHelper implements FirebaseAuth.AuthStateListener,
     }
 
 
-    private void initialize(int type) {
+    private void initialize() {
 
-        mType = type;
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(mContext.getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
 
-        if ( SIGN_IN_GOOGLE_ACCOUNT == type ) {
+        mGoogleApiClient = new GoogleApiClient.Builder(mContext)
+                .enableAutoManage((FragmentActivity)mContext /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
 
-            if ( mGoogleApiClient == null ) {
-
-                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestIdToken(mContext.getString(R.string.default_web_client_id))
-                        .requestEmail()
-                        .build();
-
-                mGoogleApiClient = new GoogleApiClient.Builder(mContext)
-                        .enableAutoManage((FragmentActivity)mContext /* FragmentActivity */, this /* OnConnectionFailedListener */)
-                        .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                        .build();
-            }
-            if ( mFirbaseAuth == null ) {
-
-                mFirbaseAuth = FirebaseAuth.getInstance();
-                mFirbaseAuth.addAuthStateListener(this);
-            }
-
-        } else if ( SIGN_IN_FACEBOOK_ACCOUNT == type ) {
-
-        }
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseAuth.addAuthStateListener(this);
     }
-    /**
-     *
-     * @param type : SIGN_IN_GOOGLE_ACCOUNT, SIGN_IN_FACEBOOK_ACCOUNT
-     */
-    public void signIn(int type) {
 
-        initialize(type);
 
-        if ( SIGN_IN_GOOGLE_ACCOUNT == mType ) {
+    public void signIn() {
 
-            signInWithGoogleAccount();
-        } else if ( SIGN_IN_FACEBOOK_ACCOUNT == mType ) {
-            signInWithFacebookAccount();
+        if ( !isInitialized ) {
+
+            initialize();
+            isInitialized = true;
         }
+        signInWithGoogleAccount();
     }
 
     private void signInWithGoogleAccount () {
@@ -117,7 +102,7 @@ public final class AuthHelper implements FirebaseAuth.AuthStateListener,
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        mFirbaseAuth.signInWithCredential(credential)
+        mFirebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener((Activity) mContext, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -125,7 +110,7 @@ public final class AuthHelper implements FirebaseAuth.AuthStateListener,
                     }
                 });
     }
-    public void SignOutWithGoogleAccount () {
+    public void signOut() {
         FirebaseAuth.getInstance().signOut();
     }
 
