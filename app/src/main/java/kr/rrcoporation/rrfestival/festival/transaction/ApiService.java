@@ -25,6 +25,7 @@ public interface ApiService {
             @Query("MobileApp") String MobileApp,
             @Query("_type") String _type,
             @Query("numOfRows") String numOfRows,
-            @Query("cat1") String cat1
+            @Query("cat1") String cat1,
+            @Query("cat2") String cat2
     );
 }

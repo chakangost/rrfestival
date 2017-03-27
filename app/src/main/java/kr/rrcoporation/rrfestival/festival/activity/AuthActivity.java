@@ -19,9 +19,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
-
 import java.util.ArrayList;
-
 import kr.rrcoporation.rrfestival.festival.R;
 import kr.rrcoporation.rrfestival.festival.provider.IdpProvider;
 import kr.rrcoporation.rrfestival.festival.util.helper.AuthHelper;
