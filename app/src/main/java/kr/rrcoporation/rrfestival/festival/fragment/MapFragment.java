@@ -1,18 +1,25 @@
 package kr.rrcoporation.rrfestival.festival.fragment;
 
+import android.Manifest;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.google.gson.Gson;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
 import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapView;
+import java.util.ArrayList;
 import kr.rrcoporation.rrfestival.festival.R;
 import kr.rrcoporation.rrfestival.festival.callback.FragmentContainerBottomCallback;
+import kr.rrcoporation.rrfestival.festival.model.BodyItem;
 import kr.rrcoporation.rrfestival.festival.model.FestivalResult;
 import kr.rrcoporation.rrfestival.festival.transaction.ApiManager;
 import kr.rrcoporation.rrfestival.festival.transaction.ApiService;
@@ -21,10 +28,14 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class MapFragment extends CommonFragment implements MapView.MapViewEventListener, MapView.POIItemEventListener{
+public class MapFragment extends CommonFragment implements MapView.MapViewEventListener, MapView.POIItemEventListener, MapView.CurrentLocationEventListener{
 
+    private double lat;
+    private double lng;
+    private MapPoint mapPoint;
     private static FragmentContainerBottomCallback fragmentContainerBottomCallback;
     private String serviceKey = "n4HqoC9EFsrq1stLyXelZtz4GPjTgjinWix/IT93c9Vr3bP+WA+zgOirr0AmIaGnSGkCiWgHV0YajENvv9vY6w==";
+    private MapView mapView;
 
     public void setPopulationFragmentCallback(FragmentContainerBottomCallback fragmentContainerBottomCallback) {
         MapFragment.fragmentContainerBottomCallback = fragmentContainerBottomCallback;
@@ -36,23 +47,63 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_map, null);
-        initMapSetting();
-        fetchFestivalData();
+        initPermission();
         return rootLayout;
     }
 
+    private void initPermission() {
+        PermissionListener permissionlistener = new PermissionListener() {
+            @Override
+            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+                Toast.makeText(getActivity(), "권한 거부\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onPermissionGranted() {
+                initMapSetting();
+            }
+        };
+
+        new TedPermission(getActivity())
+                .setPermissionListener(permissionlistener)
+                .setRationaleMessage("지도 서비스를 사용하기 위해서는 위치 접근 권한이 필요해요")
+                .setDeniedMessage("왜 거부하셨어요...\n하지만 [설정] > [권한] 에서 권한을 허용할 수 있어요.")
+                .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION)
+                .check();
+    }
+
     private void initMapSetting() {
-        MapView mapView = new MapView(getActivity());
+        mapView = new MapView(getActivity());
         mapView.setDaumMapApiKey(getString(R.string.daum_api_key));
         ViewGroup mapViewContainer = (ViewGroup) rootLayout.findViewById(R.id.map_view);
         mapViewContainer.addView(mapView);
         mapView.setMapViewEventListener(this);
         mapView.setPOIItemEventListener(this);
+        mapView.setCurrentLocationEventListener(this);
+        mapView.setShowCurrentLocationMarker(true);
+        Log.i("eunho", "initMapSetting");
     }
 
-    private void fetchFestivalData() {
+    private void initView(BodyItem[] bodyItems, MapView mapView) {
+        SystemClock.sleep(1000);
+        mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
+//        mapView.setMapCenterPoint(mapPoint, true);
+        Log.i("eunho", "initView");
+        MapPOIItem marker;
+        for (int i = 0; i < bodyItems.length; i++) {
+            marker = new MapPOIItem();
+            marker.setItemName(bodyItems[i].getTitle());
+            marker.setTag(0);
+            marker.setMapPoint(MapPoint.mapPointWithGeoCoord(bodyItems[i].getMapy(), bodyItems[i].getMapx()));
+            marker.setMarkerType(MapPOIItem.MarkerType.BluePin);
+            marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin);
+            mapView.addPOIItem(marker);
+        }
+    }
+
+    private void fetchFestivalData(final MapView mapView) {
         ApiService apiService = ApiManager.apiService;
-        Observable<FestivalResult> festivalData = apiService.fetchFestivalData(serviceKey, "1", "ETC", "AppTesting", "json", "1000", "A02");
+        Observable<FestivalResult> festivalData = apiService.fetchFestivalData(serviceKey, "", "ETC", "AppTesting", "json", "2000", "A02", "A0207");
         festivalData.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<FestivalResult>() {
@@ -60,6 +111,7 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
                     public void onNext(FestivalResult festivalResult) {
                         Gson gson = new Gson();
                         Toast.makeText(getActivity(), "result : " + gson.toJson(festivalResult.getResponse().getBody().getItems().getItem()[0]), Toast.LENGTH_SHORT).show();
+                        initView(festivalResult.getResponse().getBody().getItems().getItem(), mapView);
                     }
 
                     @Override
@@ -75,54 +127,91 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
     }
 
     @Override
+    public void onCurrentLocationUpdateCancelled(MapView mapView) {
+        Log.i("eunho", "onCurrentLocationUpdateCancelled");
+    }
+
+    @Override
+    public void onCurrentLocationUpdateFailed(MapView mapView) {
+        Log.i("eunho", "onCurrentLocationUpdateFailed");
+    }
+
+    @Override
+    public void onCurrentLocationDeviceHeadingUpdate(MapView mapView, float v) {
+        Log.i("eunho", "onCurrentLocationDeviceHeadingUpdate");
+    }
+
+    @Override
+    public void onCurrentLocationUpdate(MapView mapView, MapPoint mapPoint, float v) {
+        Log.i("eunho", "onCurrentLocationUpdate");
+        lat = mapPoint.getMapPointGeoCoord().latitude;
+        lng = mapPoint.getMapPointGeoCoord().longitude;
+        this.mapPoint = mapPoint;
+    }
+
+    @Override
     public void onDraggablePOIItemMoved(MapView mapView, MapPOIItem mapPOIItem, MapPoint mapPoint) {
+        Log.i("eunho", "onDraggablePOIItemMoved");
     }
 
     @Override
     public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem, MapPOIItem.CalloutBalloonButtonType calloutBalloonButtonType) {
+        Log.i("eunho", "onCalloutBalloonOfPOIItemTouched");
     }
 
     @Override
     public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem) {
+        Log.i("eunho", "onCalloutBalloonOfPOIItemTouched");
     }
 
     @Override
     public void onPOIItemSelected(MapView mapView, MapPOIItem mapPOIItem) {
+        Log.i("eunho", "onPOIItemSelected");
     }
 
     @Override
     public void onMapViewMoveFinished(MapView mapView, MapPoint mapPoint) {
+        Log.i("eunho", "onMapViewMoveFinished");
     }
 
     @Override
     public void onMapViewDragEnded(MapView mapView, MapPoint mapPoint) {
+        Log.i("eunho", "onMapViewDragEnded");
     }
 
     @Override
     public void onMapViewDragStarted(MapView mapView, MapPoint mapPoint) {
+        Log.i("eunho", "onMapViewDragStarted");
     }
 
     @Override
     public void onMapViewLongPressed(MapView mapView, MapPoint mapPoint) {
+        Log.i("eunho", "onMapViewLongPressed");
     }
 
     @Override
     public void onMapViewDoubleTapped(MapView mapView, MapPoint mapPoint) {
+        Log.i("eunho", "onMapViewDoubleTapped");
     }
 
     @Override
     public void onMapViewSingleTapped(MapView mapView, MapPoint mapPoint) {
+        Log.i("eunho", "onMapViewSingleTapped");
     }
 
     @Override
     public void onMapViewZoomLevelChanged(MapView mapView, int i) {
+        Log.i("eunho", "onMapViewZoomLevelChanged");
     }
 
     @Override
     public void onMapViewCenterPointMoved(MapView mapView, MapPoint mapPoint) {
+        Log.i("eunho", "onMapViewCenterPointMoved");
     }
 
     @Override
     public void onMapViewInitialized(MapView mapView) {
+        Log.i("eunho", "onMapViewInitialized");
+        fetchFestivalData(mapView);
     }
 }
