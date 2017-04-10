@@ -15,14 +15,19 @@ import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
+import net.daum.mf.map.api.MapPointBounds;
 import net.daum.mf.map.api.MapView;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 import kr.rrcoporation.rrfestival.festival.R;
 import kr.rrcoporation.rrfestival.festival.callback.FragmentContainerBottomCallback;
 import kr.rrcoporation.rrfestival.festival.model.BodyItem;
 import kr.rrcoporation.rrfestival.festival.model.FestivalResult;
 import kr.rrcoporation.rrfestival.festival.transaction.ApiManager;
 import kr.rrcoporation.rrfestival.festival.transaction.ApiService;
+import kr.rrcoporation.rrfestival.festival.util.Util;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -36,6 +41,9 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
     private static FragmentContainerBottomCallback fragmentContainerBottomCallback;
     private String serviceKey = "n4HqoC9EFsrq1stLyXelZtz4GPjTgjinWix/IT93c9Vr3bP+WA+zgOirr0AmIaGnSGkCiWgHV0YajENvv9vY6w==";
     private MapView mapView;
+    private static BodyItem[] bodyItems;
+    private List<BodyItem> currentDrawerItems = new ArrayList<>();
+    private Gson gson = new Gson();
 
     public void setPopulationFragmentCallback(FragmentContainerBottomCallback fragmentContainerBottomCallback) {
         MapFragment.fragmentContainerBottomCallback = fragmentContainerBottomCallback;
@@ -84,17 +92,35 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
         Log.i("eunho", "initMapSetting");
     }
 
-    private void initView(BodyItem[] bodyItems, MapView mapView) {
+    private void initView(BodyItem[] items, MapView mapView) {
+        bodyItems = items;
         SystemClock.sleep(1000);
         mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
 //        mapView.setMapCenterPoint(mapPoint, true);
         Log.i("eunho", "initView");
+//        currentScreenMarker();
+
         MapPOIItem marker;
-        for (int i = 0; i < bodyItems.length; i++) {
+        for (BodyItem item : bodyItems) {
             marker = new MapPOIItem();
-            marker.setItemName(bodyItems[i].getTitle());
-            marker.setTag(0);
-            marker.setMapPoint(MapPoint.mapPointWithGeoCoord(bodyItems[i].getMapy(), bodyItems[i].getMapx()));
+            marker.setItemName(item.getTitle());
+            marker.setTag(item.getContentid());
+            marker.setMapPoint(MapPoint.mapPointWithGeoCoord(item.getMapy(), item.getMapx()));
+            marker.setMarkerType(MapPOIItem.MarkerType.BluePin);
+            marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin);
+            mapView.addPOIItem(marker);
+        }
+    }
+
+    private void currentScreenMarker() {
+        MapPointBounds visibleBounds = mapView.getMapPointBounds();
+        currentDrawerItems = filterOnlyVisibleFestival(visibleBounds, bodyItems);
+        MapPOIItem marker;
+        for (BodyItem item : currentDrawerItems) {
+            marker = new MapPOIItem();
+            marker.setItemName(item.getTitle());
+            marker.setTag(item.getContentid());
+            marker.setMapPoint(MapPoint.mapPointWithGeoCoord(item.getMapy(), item.getMapx()));
             marker.setMarkerType(MapPOIItem.MarkerType.BluePin);
             marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin);
             mapView.addPOIItem(marker);
@@ -103,14 +129,13 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
 
     private void fetchFestivalData(final MapView mapView) {
         ApiService apiService = ApiManager.apiService;
-        Observable<FestivalResult> festivalData = apiService.fetchFestivalData(serviceKey, "", "ETC", "AppTesting", "json", "2000", "A02", "A0207");
+        final Observable<FestivalResult> festivalData = apiService.fetchFestivalData(serviceKey, "", "ETC", "AppTesting", "json", "2000", "A02", "A0207");
         festivalData.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<FestivalResult>() {
                     @Override
                     public void onNext(FestivalResult festivalResult) {
-                        Gson gson = new Gson();
-                        Toast.makeText(getActivity(), "result : " + gson.toJson(festivalResult.getResponse().getBody().getItems().getItem()[0]), Toast.LENGTH_SHORT).show();
+                        Util.setSharedPreference(getContext(), "FESTIVAL_LIST", gson.toJson(festivalResult));
                         initView(festivalResult.getResponse().getBody().getItems().getItem(), mapView);
                     }
 
@@ -167,11 +192,28 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
     @Override
     public void onPOIItemSelected(MapView mapView, MapPOIItem mapPOIItem) {
         Log.i("eunho", "onPOIItemSelected");
+        Toast.makeText(getActivity(), "" + mapPOIItem.getTag(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onMapViewMoveFinished(MapView mapView, MapPoint mapPoint) {
         Log.i("eunho", "onMapViewMoveFinished");
+//        currentScreenMarker();
+        mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
+    }
+
+    private List<BodyItem> filterOnlyVisibleFestival(MapPointBounds visibleBounds, BodyItem[] items) {
+        List<BodyItem> festivalItems = new LinkedList<>(Arrays.asList(items));
+        List<BodyItem> visiblePoints = new ArrayList<>();
+        MapPoint latLng;
+        for (BodyItem item : festivalItems) {
+            latLng = MapPoint.mapPointWithGeoCoord(item.getMapy(), item.getMapx());
+            if (!visibleBounds.contains(latLng)) {
+                continue;
+            }
+            visiblePoints.add(item);
+        }
+        return visiblePoints;
     }
 
     @Override
@@ -212,6 +254,12 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
     @Override
     public void onMapViewInitialized(MapView mapView) {
         Log.i("eunho", "onMapViewInitialized");
-        fetchFestivalData(mapView);
+        if (Util.getSharedPreference(getContext(), "FESTIVAL_LIST").equals("")) {
+            fetchFestivalData(mapView);
+        } else {
+            String festivalGsonStr = Util.getSharedPreference(getContext(), "FESTIVAL_LIST");
+            FestivalResult festivalItem = gson.fromJson(festivalGsonStr, FestivalResult.class);
+            initView(festivalItem.getResponse().getBody().getItems().getItem(), mapView);
+        }
     }
 }
