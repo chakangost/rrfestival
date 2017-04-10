@@ -2,6 +2,10 @@ package kr.rrcoporation.rrfestival.festival.application;
 
 import android.app.Activity;
 import android.support.multidex.MultiDexApplication;
+
+import com.facebook.stetho.Stetho;
+
+import kr.rrcoporation.rrfestival.festival.BuildConfig;
 import kr.rrcoporation.rrfestival.festival.transaction.ApiAction;
 import kr.rrcoporation.rrfestival.festival.transaction.ApiManager;
 
@@ -16,6 +20,9 @@ public class RRApplication extends MultiDexApplication {
         instance = this;
         ApiManager.init();
         ApiAction.init(this);
+        if (BuildConfig.DEBUG) {
+            Stetho.initializeWithDefaults(this);
+        }
     }
 
     @Override

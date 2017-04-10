@@ -1,8 +1,11 @@
 package kr.rrcoporation.rrfestival.festival.transaction;
 
+import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.GsonBuilder;
 import java.io.IOException;
+
+import kr.rrcoporation.rrfestival.festival.BuildConfig;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -43,6 +46,9 @@ public class ApiManager {
             throw new IllegalStateException("Access token is already set");
         }
         instance = new ApiManager();
+        if (BuildConfig.DEBUG) {
+            instance.httpClient.addNetworkInterceptor(new StethoInterceptor());
+        }
         instance.init_();
     }
 
