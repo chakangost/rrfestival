@@ -25,11 +25,14 @@ import kr.rrcoporation.rrfestival.festival.R;
 import kr.rrcoporation.rrfestival.festival.callback.FragmentContainerBottomCallback;
 import kr.rrcoporation.rrfestival.festival.model.BodyItem;
 import kr.rrcoporation.rrfestival.festival.model.FestivalResult;
+import kr.rrcoporation.rrfestival.festival.store.MyFestivalStore;
+import kr.rrcoporation.rrfestival.festival.transaction.ApiAction;
 import kr.rrcoporation.rrfestival.festival.transaction.ApiManager;
 import kr.rrcoporation.rrfestival.festival.transaction.ApiService;
 import kr.rrcoporation.rrfestival.festival.util.Util;
 import rx.Observable;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -41,9 +44,10 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
     private static FragmentContainerBottomCallback fragmentContainerBottomCallback;
     private String serviceKey = "n4HqoC9EFsrq1stLyXelZtz4GPjTgjinWix/IT93c9Vr3bP+WA+zgOirr0AmIaGnSGkCiWgHV0YajENvv9vY6w==";
     private MapView mapView;
-    private static BodyItem[] bodyItems;
+    private static List<BodyItem> bodyItems;
     private List<BodyItem> currentDrawerItems = new ArrayList<>();
     private Gson gson = new Gson();
+    private Subscription subscription;
 
     public void setPopulationFragmentCallback(FragmentContainerBottomCallback fragmentContainerBottomCallback) {
         MapFragment.fragmentContainerBottomCallback = fragmentContainerBottomCallback;
@@ -55,8 +59,31 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_map, null);
+        observeFestivalStore();
         initPermission();
         return rootLayout;
+    }
+
+    private void observeFestivalStore() {
+        subscription = MyFestivalStore.getInstance().observe().observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<Void>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Void aVoid) {
+                List<BodyItem> festivals = MyFestivalStore.getInstance().getFestivals();
+                FestivalResult festivalResult = MyFestivalStore.getInstance().getFestivalResult();
+                Util.setSharedPreference(getContext(), "FESTIVAL_LIST", gson.toJson(festivalResult));
+                initView(festivals, mapView);
+            }
+        });
     }
 
     private void initPermission() {
@@ -92,7 +119,7 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
         Log.i("eunho", "initMapSetting");
     }
 
-    private void initView(BodyItem[] items, MapView mapView) {
+    private void initView(List<BodyItem> items, MapView mapView) {
         bodyItems = items;
         SystemClock.sleep(1000);
         mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
@@ -135,8 +162,8 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
                 .subscribe(new Subscriber<FestivalResult>() {
                     @Override
                     public void onNext(FestivalResult festivalResult) {
-                        Util.setSharedPreference(getContext(), "FESTIVAL_LIST", gson.toJson(festivalResult));
-                        initView(festivalResult.getResponse().getBody().getItems().getItem(), mapView);
+                        Util.setSharedPreference(getContext(), "FESTIVAL_LIST", gson.toJson(festivalResult.getResponse().getBody().getItems().getItem()));
+                        initView(new LinkedList<>(Arrays.asList(festivalResult.getResponse().getBody().getItems().getItem())), mapView);
                     }
 
                     @Override
@@ -202,11 +229,10 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
         mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
     }
 
-    private List<BodyItem> filterOnlyVisibleFestival(MapPointBounds visibleBounds, BodyItem[] items) {
-        List<BodyItem> festivalItems = new LinkedList<>(Arrays.asList(items));
+    private List<BodyItem> filterOnlyVisibleFestival(MapPointBounds visibleBounds, List<BodyItem> items) {
         List<BodyItem> visiblePoints = new ArrayList<>();
         MapPoint latLng;
-        for (BodyItem item : festivalItems) {
+        for (BodyItem item : items) {
             latLng = MapPoint.mapPointWithGeoCoord(item.getMapy(), item.getMapx());
             if (!visibleBounds.contains(latLng)) {
                 continue;
@@ -255,11 +281,11 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
     public void onMapViewInitialized(MapView mapView) {
         Log.i("eunho", "onMapViewInitialized");
         if (Util.getSharedPreference(getContext(), "FESTIVAL_LIST").equals("")) {
-            fetchFestivalData(mapView);
+            ApiAction.getInstance().fetchFestivals();
         } else {
             String festivalGsonStr = Util.getSharedPreference(getContext(), "FESTIVAL_LIST");
             FestivalResult festivalItem = gson.fromJson(festivalGsonStr, FestivalResult.class);
-            initView(festivalItem.getResponse().getBody().getItems().getItem(), mapView);
+            initView(new LinkedList<>(Arrays.asList(festivalItem.getResponse().getBody().getItems().getItem())), mapView);
         }
     }
 }
