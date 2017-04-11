@@ -49,10 +49,11 @@ public class RandomFingerFragment extends CommonFragment {
 
             mCardStack.setStackMargin(20);
 
-            mCardAdapter = new CardsDataAdapter(getActivity().getApplicationContext());
-            for (BodyItem bodyItem : bodyItems) {
-                mCardAdapter.add(bodyItem.getTitle());
-            }
+//            for (BodyItem bodyItem : bodyItems) {
+//
+//            }
+
+            mCardAdapter = new CardsDataAdapter(getActivity().getApplicationContext(), bodyItems);
             mCardStack.setAdapter(mCardAdapter);
         }
         return rootLayout;
@@ -78,10 +79,7 @@ public class RandomFingerFragment extends CommonFragment {
 
                 mCardStack.setStackMargin(20);
 
-                mCardAdapter = new CardsDataAdapter(getActivity().getApplicationContext());
-                for (BodyItem bodyItem : festivals) {
-                    mCardAdapter.add(bodyItem.getTitle());
-                }
+                mCardAdapter = new CardsDataAdapter(getActivity().getApplicationContext(), festivals);
                 mCardStack.setAdapter(mCardAdapter);
             }
         });
