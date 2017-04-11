@@ -30,16 +30,11 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
-public class MapFragment extends CommonFragment implements MapView.MapViewEventListener, MapView.POIItemEventListener, MapView.CurrentLocationEventListener{
+public class MapFragment extends CommonFragment implements MapView.MapViewEventListener, MapView.POIItemEventListener, MapView.CurrentLocationEventListener {
 
-    private double lat;
-    private double lng;
-    private MapPoint mapPoint;
     private static FragmentContainerBottomCallback fragmentContainerBottomCallback;
-    private String serviceKey = "n4HqoC9EFsrq1stLyXelZtz4GPjTgjinWix/IT93c9Vr3bP+WA+zgOirr0AmIaGnSGkCiWgHV0YajENvv9vY6w==";
-    private MapView mapView;
-    private static List<BodyItem> bodyItems;
-    private List<BodyItem> currentDrawerItems = new ArrayList<>();
+    private        MapView                         mapView;
+    private static List<BodyItem>                  bodyItems;
     private Gson gson = new Gson();
     private Subscription subscription;
 
@@ -56,6 +51,30 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
         observeFestivalStore();
         initPermission();
         return rootLayout;
+    }
+
+    @Override
+    public void onMapViewMoveFinished(MapView mapView, MapPoint mapPoint) {
+        mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
+    }
+
+    @Override
+    public void onMapViewInitialized(MapView mapView) {
+        if (Util.getSharedPreference(getContext(), "FESTIVAL_LIST").equals("")) {
+            ApiAction.getInstance().fetchFestivals();
+        } else {
+            String festivalGsonStr = Util.getSharedPreference(getContext(), "FESTIVAL_LIST");
+            FestivalResult festivalItem = gson.fromJson(festivalGsonStr, FestivalResult.class);
+            initView(new LinkedList<>(Arrays.asList(festivalItem.getResponse().getBody().getItems().getItem())), mapView);
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (subscription != null) {
+            subscription.unsubscribe();
+        }
     }
 
     private void observeFestivalStore() {
@@ -93,12 +112,7 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
             }
         };
 
-        new TedPermission(getActivity())
-                .setPermissionListener(permissionlistener)
-                .setRationaleMessage("지도 서비스를 사용하기 위해서는 위치 접근 권한이 필요해요")
-                .setDeniedMessage("왜 거부하셨어요...\n하지만 [설정] > [권한] 에서 권한을 허용할 수 있어요.")
-                .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION)
-                .check();
+        new TedPermission(getActivity()).setPermissionListener(permissionlistener).setRationaleMessage("지도 서비스를 사용하기 위해서는 위치 접근 권한이 필요해요").setDeniedMessage("왜 거부하셨어요...\n하지만 [설정] > [권한] 에서 권한을 허용할 수 있어요.").setPermissions(Manifest.permission.ACCESS_FINE_LOCATION).check();
     }
 
     private void initMapSetting() {
@@ -131,25 +145,6 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
 
     @Override
     public void onCurrentLocationUpdate(MapView mapView, MapPoint mapPoint, float v) {
-        lat = mapPoint.getMapPointGeoCoord().latitude;
-        lng = mapPoint.getMapPointGeoCoord().longitude;
-        this.mapPoint = mapPoint;
-    }
-
-    @Override
-    public void onMapViewMoveFinished(MapView mapView, MapPoint mapPoint) {
-        mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
-    }
-
-    @Override
-    public void onMapViewInitialized(MapView mapView) {
-        if (Util.getSharedPreference(getContext(), "FESTIVAL_LIST").equals("")) {
-            ApiAction.getInstance().fetchFestivals();
-        } else {
-            String festivalGsonStr = Util.getSharedPreference(getContext(), "FESTIVAL_LIST");
-            FestivalResult festivalItem = gson.fromJson(festivalGsonStr, FestivalResult.class);
-            initView(new LinkedList<>(Arrays.asList(festivalItem.getResponse().getBody().getItems().getItem())), mapView);
-        }
     }
 
     @Override

@@ -6,36 +6,92 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+
+import com.google.gson.Gson;
 import com.wenchao.cardstack.CardStack;
+
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
 import kr.rrcoporation.rrfestival.festival.R;
+import kr.rrcoporation.rrfestival.festival.model.BodyItem;
+import kr.rrcoporation.rrfestival.festival.model.FestivalResult;
+import kr.rrcoporation.rrfestival.festival.store.MyFestivalStore;
+import kr.rrcoporation.rrfestival.festival.util.Util;
 import kr.rrcoporation.rrfestival.festival.view.CardsDataAdapter;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 
 public class RandomFingerFragment extends CommonFragment {
 
-    private RelativeLayout     rootLayout;
+    private RelativeLayout   rootLayout;
     private CardStack        mCardStack;
     private CardsDataAdapter mCardAdapter;
+    private Subscription     subscription;
+    private static List<BodyItem>                  bodyItems;
+    private Gson gson = new Gson();
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_random_finger, null);
-        mCardStack = (CardStack) rootLayout.findViewById(R.id.container);
-        mCardStack.setContentResource(R.layout.festival_detail);
+        if (Util.getSharedPreference(getContext(), "FESTIVAL_LIST").equals("")) {
+            observeFestivalStore();
+        } else {
+            String festivalGsonStr = Util.getSharedPreference(getContext(), "FESTIVAL_LIST");
+            FestivalResult festivalItem = gson.fromJson(festivalGsonStr, FestivalResult.class);
+            bodyItems = new LinkedList<>(Arrays.asList(festivalItem.getResponse().getBody().getItems().getItem()));
 
-        mCardStack.setStackMargin(20);
+            mCardStack = (CardStack) rootLayout.findViewById(R.id.container);
+            mCardStack.setContentResource(R.layout.festival_detail);
 
-        mCardAdapter = new CardsDataAdapter(getActivity().getApplicationContext());
-        mCardAdapter.add("test1");
-        mCardAdapter.add("test2");
-        mCardAdapter.add("test3");
-        mCardAdapter.add("test4");
-        mCardAdapter.add("test5");
-        mCardAdapter.add("test6");
-        mCardAdapter.add("test7");
+            mCardStack.setStackMargin(20);
 
-        mCardStack.setAdapter(mCardAdapter);
-
+            mCardAdapter = new CardsDataAdapter(getActivity().getApplicationContext());
+            for (BodyItem bodyItem : bodyItems) {
+                mCardAdapter.add(bodyItem.getTitle());
+            }
+            mCardStack.setAdapter(mCardAdapter);
+        }
         return rootLayout;
+    }
+
+    private void observeFestivalStore() {
+        subscription = MyFestivalStore.getInstance().observe().observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<Void>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Void aVoid) {
+                List<BodyItem> festivals = MyFestivalStore.getInstance().getFestivals();
+                mCardStack = (CardStack) rootLayout.findViewById(R.id.container);
+                mCardStack.setContentResource(R.layout.festival_detail);
+
+                mCardStack.setStackMargin(20);
+
+                mCardAdapter = new CardsDataAdapter(getActivity().getApplicationContext());
+                for (BodyItem bodyItem : festivals) {
+                    mCardAdapter.add(bodyItem.getTitle());
+                }
+                mCardStack.setAdapter(mCardAdapter);
+            }
+        });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (subscription != null) {
+            subscription.unsubscribe();
+        }
     }
 }
