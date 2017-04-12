@@ -6,14 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-
 import com.google.gson.Gson;
 import com.wenchao.cardstack.CardStack;
-
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-
 import kr.rrcoporation.rrfestival.festival.R;
 import kr.rrcoporation.rrfestival.festival.model.BodyItem;
 import kr.rrcoporation.rrfestival.festival.model.FestivalResult;
@@ -49,11 +47,14 @@ public class RandomFingerFragment extends CommonFragment {
 
             mCardStack.setStackMargin(20);
 
-//            for (BodyItem bodyItem : bodyItems) {
-//
-//            }
+            List<BodyItem> festivals = new ArrayList<>();
+            for (BodyItem bodyItem : bodyItems) {
+                if (bodyItem.getFirstimage() != null) {
+                    festivals.add(bodyItem);
+                }
+            }
 
-            mCardAdapter = new CardsDataAdapter(getActivity().getApplicationContext(), bodyItems);
+            mCardAdapter = new CardsDataAdapter(getActivity().getApplicationContext(), festivals);
             mCardStack.setAdapter(mCardAdapter);
         }
         return rootLayout;
