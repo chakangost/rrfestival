@@ -11,6 +11,25 @@
         android:clipChildren="false"
         android:clipToPadding="false"
         android:gravity="center"
-        android:padding="10dp"/>
+        android:padding="10dp">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="40dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginBottom="55dp">
+
+            <Button
+                android:id="@+id/btn_add_favorite"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:background="@drawable/btn_plus_f"/>
+
+        </FrameLayout>
+    </com.wenchao.cardstack.CardStack>
 
 </RelativeLayout>

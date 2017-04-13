@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 import com.google.gson.Gson;
 import com.wenchao.cardstack.CardStack;
 import java.util.ArrayList;
@@ -22,19 +23,20 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
-public class RandomFingerFragment extends CommonFragment {
+public class RandomFingerFragment extends CommonFragment implements View.OnClickListener {
 
-    private RelativeLayout   rootLayout;
-    private CardStack        mCardStack;
-    private CardsDataAdapter mCardAdapter;
-    private Subscription     subscription;
-    private static List<BodyItem>                  bodyItems;
+    private        RelativeLayout   rootLayout;
+    private        CardStack        mCardStack;
+    private        CardsDataAdapter mCardAdapter;
+    private        Subscription     subscription;
+    private static List<BodyItem>   bodyItems;
     private Gson gson = new Gson();
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_random_finger, null);
+        rootLayout.findViewById(R.id.btn_add_favorite).setOnClickListener(this);
         if (Util.getSharedPreference(getContext(), "FESTIVAL_LIST").equals("")) {
             observeFestivalStore();
         } else {
@@ -44,6 +46,32 @@ public class RandomFingerFragment extends CommonFragment {
 
             mCardStack = (CardStack) rootLayout.findViewById(R.id.container);
             mCardStack.setContentResource(R.layout.festival_detail);
+            mCardStack.setListener(new CardStack.CardEventListener() {
+                @Override
+                public boolean swipeEnd(int i, float v) {
+                    return true;
+                }
+
+                @Override
+                public boolean swipeStart(int i, float v) {
+                    return true;
+                }
+
+                @Override
+                public boolean swipeContinue(int i, float v, float v1) {
+                    return true;
+                }
+
+                @Override
+                public void discarded(int i, int i1) {
+                    Toast.makeText(getActivity(), "" + bodyItems.get(i).getTitle(), Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void topCardTapped() {
+
+                }
+            });
 
             mCardStack.setStackMargin(20);
 
@@ -58,6 +86,15 @@ public class RandomFingerFragment extends CommonFragment {
             mCardStack.setAdapter(mCardAdapter);
         }
         return rootLayout;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_add_favorite:
+                Toast.makeText(getActivity(), "clicked", Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 
     private void observeFestivalStore() {
