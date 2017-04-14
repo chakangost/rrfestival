@@ -47,6 +47,7 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
             mCardStack = (CardStack) rootLayout.findViewById(R.id.container);
             mCardStack.setContentResource(R.layout.festival_detail);
             mCardStack.setListener(new CardStack.CardEventListener() {
+
                 @Override
                 public boolean swipeEnd(int i, float v) {
                     return true;
@@ -69,7 +70,6 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
 
                 @Override
                 public void topCardTapped() {
-
                 }
             });
 
@@ -101,12 +101,10 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
         subscription = MyFestivalStore.getInstance().observe().observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<Void>() {
             @Override
             public void onCompleted() {
-
             }
 
             @Override
             public void onError(Throwable e) {
-
             }
 
             @Override
