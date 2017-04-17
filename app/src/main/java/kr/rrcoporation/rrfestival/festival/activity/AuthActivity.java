@@ -25,7 +25,7 @@ import kr.rrcoporation.rrfestival.festival.provider.IdpProvider;
 import kr.rrcoporation.rrfestival.festival.util.helper.AuthHelper;
 
 public class AuthActivity extends CommonFragmentActivity implements View.OnClickListener {
-    private static final String TAG = "AuthMethodPicker";
+    private static final String TAG = "AuthActivity";
     private static final int RC_EMAIL_FLOW = 2;
     private static final int RC_ACCOUNT_LINK = 3;
 
