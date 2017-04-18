@@ -1,6 +1,7 @@
 package kr.rrcoporation.rrfestival.festival.fragment;
 
 import android.Manifest;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
@@ -9,20 +10,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
 import com.google.gson.Gson;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
-
 import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapView;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-
 import kr.rrcoporation.rrfestival.festival.R;
 import kr.rrcoporation.rrfestival.festival.callback.FragmentContainerBottomCallback;
 import kr.rrcoporation.rrfestival.festival.model.BodyItem;
@@ -40,7 +37,8 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
     private        MapView                         mapView;
     private static List<BodyItem>                  bodyItems;
     private Gson gson = new Gson();
-    private Subscription subscription;
+    private Subscription   subscription;
+    private SQLiteDatabase db;
 
     public void setPopulationFragmentCallback(FragmentContainerBottomCallback fragmentContainerBottomCallback) {
         MapFragment.fragmentContainerBottomCallback = fragmentContainerBottomCallback;

@@ -21,6 +21,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    defaultConfig {
+        multiDexEnabled true
+    }
     splits {
         abi {
             enable true
@@ -60,6 +63,7 @@ dependencies {
     compile 'gun0912.ted:tedpermission:1.0.3'
     compile 'com.facebook.stetho:stetho:1.4.1'
     compile 'com.facebook.stetho:stetho-okhttp3:1.4.1'
+
 }
 
 apply plugin: 'com.google.gms.google-services'
