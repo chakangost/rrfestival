@@ -19,6 +19,17 @@ public interface ApiService {
 
     @GET("openapi/service/rest/KorService/areaBasedList")
     Observable<FestivalResult> fetchFestivalData(
+            @Query("areaCode") String areaCode,
+            @Query("MobileOS") String MobileOS,
+            @Query("MobileApp") String MobileApp,
+            @Query("_type") String _type,
+            @Query("numOfRows") String numOfRows,
+            @Query("cat1") String cat1,
+            @Query("cat2") String cat2
+    );
+
+    @GET("openapi/service/rest/KorService/areaBasedList")
+    Observable<FestivalResult> getFestivalCommonInformation(
             @Query("ServiceKey") String ServiceKey,
             @Query("areaCode") String areaCode,
             @Query("MobileOS") String MobileOS,
@@ -28,4 +39,6 @@ public interface ApiService {
             @Query("cat1") String cat1,
             @Query("cat2") String cat2
     );
+
+
 }

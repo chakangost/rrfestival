@@ -18,6 +18,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ApiManager {
 
     private static final String BASE_URL = "http://api.visitkorea.or.kr/";
+    private static final String SERVICE_KEY = "n4HqoC9EFsrq1stLyXelZtz4GPjTgjinWix/IT93c9Vr3bP+WA+zgOirr0AmIaGnSGkCiWgHV0YajENvv9vY6w==";
     private static ApiManager instance;
     public static ApiService apiService;
     private ApiManager() {}
@@ -29,6 +30,7 @@ public class ApiManager {
             HttpUrl originalHttpUrl = original.url();
 
             HttpUrl url = originalHttpUrl.newBuilder()
+                    .addQueryParameter("ServiceKey", SERVICE_KEY)
                     .build();
 
             Request.Builder requestBuilder = original.newBuilder()

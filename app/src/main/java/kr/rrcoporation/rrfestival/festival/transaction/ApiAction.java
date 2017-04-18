@@ -17,7 +17,6 @@ public class ApiAction {
     private static ApiAction  instance;
     private        Context    context;
     public static  ApiService apiService;
-    private String serviceKey = "n4HqoC9EFsrq1stLyXelZtz4GPjTgjinWix/IT93c9Vr3bP+WA+zgOirr0AmIaGnSGkCiWgHV0YajENvv9vY6w==";
 
     private ApiAction(Context context) {
         this.context = context;
@@ -84,7 +83,7 @@ public class ApiAction {
     }
 
     public void fetchFestivals() {
-        ApiManager.apiService.fetchFestivalData(serviceKey, "", "ETC", "AppTesting", "json", "2000", "A02", "A0207")
+        ApiManager.apiService.fetchFestivalData("", "ETC", "AppTesting", "json", "2000", "A02", "A0207")
                 .subscribeOn(Schedulers.newThread()).subscribe(new Subscriber<FestivalResult>() {
             @Override
             public void onCompleted() {
