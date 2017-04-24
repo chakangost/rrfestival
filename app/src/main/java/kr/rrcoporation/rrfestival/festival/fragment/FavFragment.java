@@ -16,6 +16,9 @@ public class FavFragment extends CommonFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_fav, null);
+
+        
+
         return rootLayout;
     }
 }

@@ -1,6 +1,7 @@
 package kr.rrcoporation.rrfestival.festival.fragment;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -115,6 +116,15 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
     }
 
     private void saveBookmark() {
+        String existDataQuery = "select * from festival where contentid = '" + bodyItems.get(festivalsPosition).getContentid() + "';";
+        Cursor cursor = db.rawQuery(existDataQuery, null);
+
+        int columnCnt = cursor.getCount();
+
+        if (columnCnt != 0) {
+            return;
+        }
+
         String tableName = "festival";
         String colums = "contentid, title, lat, lng, contenttypeid, firstimage";
         String str1 = "INSERT INTO " + tableName + " (" + colums + ") values(";

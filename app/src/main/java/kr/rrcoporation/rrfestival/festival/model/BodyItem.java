@@ -25,6 +25,14 @@ public class BodyItem {
     private String     title;
     private String     zipcode;
 
+    public BodyItem(int contentId, String title, double lat, double lng, String firstimage) {
+        this.contentid = contentId;
+        this.title = title;
+        this.mapy = lat;
+        this.mapx = lng;
+        this.firstimage = firstimage;
+    }
+
     public String getAddr1() {
         return addr1;
     }

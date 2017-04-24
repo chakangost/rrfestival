@@ -1,23 +1,24 @@
 package kr.rrcoporation.rrfestival.festival.transaction;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import kr.rrcoporation.rrfestival.festival.model.BodyItem;
 import kr.rrcoporation.rrfestival.festival.model.FestivalResult;
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 import rx.schedulers.Schedulers;
 
 public class ApiAction {
-    private static ApiAction  instance;
-    private        Context    context;
-    public static  ApiService apiService;
-
+    private static ApiAction      instance;
+    private        Context        context;
+    public static  ApiService     apiService;
+    private        SQLiteDatabase apiDB;
     private ApiAction(Context context) {
         this.context = context;
     }
@@ -55,7 +56,7 @@ public class ApiAction {
     }
 
     public enum ActionType {
-        JONGHYUN_TYPE, FETCH_FESTIVALS
+        JONGHYUN_TYPE, FETCH_FESTIVALS, FETCH_BOOKMARKS
     }
 
     public void fetchTestApi() {
@@ -105,6 +106,20 @@ public class ApiAction {
                 }
             }
         });
+    }
+
+    public void fetchBookmarks() {
+        List<BodyItem> result = new ArrayList<>();
+        apiDB = context.openOrCreateDatabase("FESTIVALS.db", Context.MODE_PRIVATE, null);
+        String query = "select * from festival;";
+        Cursor cursor = apiDB.rawQuery(query, null);
+        while (cursor.moveToNext()) {
+            result.add(new BodyItem(Integer.valueOf(cursor.getString(cursor.getColumnIndex("contentid"))), cursor.getString(cursor.getColumnIndex("title")), Double.valueOf(cursor.getString(cursor.getColumnIndex("lat"))), Double.valueOf(cursor.getString(cursor.getColumnIndex("lng"))), cursor.getString(cursor.getColumnIndex("firstimage"))));
+        }
+
+        for (ActionListener listener : actionListeners.get(ActionType.FETCH_BOOKMARKS)) {
+            listener.onActionTriggered(result);
+        }
     }
 
 }
