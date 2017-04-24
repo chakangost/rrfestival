@@ -3,6 +3,7 @@ package kr.rrcoporation.rrfestival.festival.transaction;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.GsonBuilder;
+
 import java.io.IOException;
 
 import kr.rrcoporation.rrfestival.festival.BuildConfig;
@@ -19,6 +20,9 @@ public class ApiManager {
 
     private static final String BASE_URL = "http://api.visitkorea.or.kr/";
     private static final String SERVICE_KEY = "n4HqoC9EFsrq1stLyXelZtz4GPjTgjinWix/IT93c9Vr3bP+WA+zgOirr0AmIaGnSGkCiWgHV0YajENvv9vY6w==";
+    private static final String MOBILE_OS = "AND"; //IOS, AND, WIN, ETC
+    private static final String MOBILE_APP = "TourAPI3.0_Guide";
+    private static final String RETURN_TYPE = "json";
     private static ApiManager instance;
     public static ApiService apiService;
     private ApiManager() {}
@@ -30,7 +34,24 @@ public class ApiManager {
             HttpUrl originalHttpUrl = original.url();
 
             HttpUrl url = originalHttpUrl.newBuilder()
+                    //Default Keys
                     .addQueryParameter("ServiceKey", SERVICE_KEY)
+                    .addQueryParameter("MobileOS", MOBILE_OS)
+                    .addQueryParameter("MobileApp", MOBILE_APP)
+                    .addQueryParameter("_type", RETURN_TYPE)
+                    //상세 조회 Default Params.
+                    .addQueryParameter("defaultYN", "Y")
+                    .addQueryParameter("firstImageYN", "Y")
+                    .addQueryParameter("areacodeYN", "Y")
+                    .addQueryParameter("catcodeYN", "Y")
+                    .addQueryParameter("addrinfoYN", "Y")
+                    .addQueryParameter("mapinfoYN", "Y")
+                    .addQueryParameter("overviewYN", "Y")
+                    .addQueryParameter("introYN", "Y")
+                    .addQueryParameter("listYN", "Y")
+                    .addQueryParameter("detailYN", "Y")
+                    .addQueryParameter("imageYN", "Y")
+                    .addQueryParameter("transGuideYN", "Y")
                     .build();
 
             Request.Builder requestBuilder = original.newBuilder()
