@@ -20,6 +20,7 @@ import kr.rrcoporation.rrfestival.festival.R;
 import kr.rrcoporation.rrfestival.festival.model.BodyItem;
 import kr.rrcoporation.rrfestival.festival.model.FestivalResult;
 import kr.rrcoporation.rrfestival.festival.store.MyFestivalStore;
+import kr.rrcoporation.rrfestival.festival.transaction.ApiAction;
 import kr.rrcoporation.rrfestival.festival.util.Util;
 import kr.rrcoporation.rrfestival.festival.view.CardsDataAdapter;
 import rx.Subscriber;
@@ -147,6 +148,8 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
 
         db.setTransactionSuccessful();
         db.endTransaction();
+
+        ApiAction.getInstance().fetchBookmarks();
     }
 
     private void createDB() {
