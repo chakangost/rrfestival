@@ -12,6 +12,7 @@ import kr.rrcoporation.rrfestival.festival.model.BodyItem;
 import kr.rrcoporation.rrfestival.festival.model.FestivalResult;
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class ApiAction {
@@ -56,7 +57,10 @@ public class ApiAction {
     }
 
     public enum ActionType {
-        JONGHYUN_TYPE, FETCH_FESTIVALS, FETCH_BOOKMARKS
+        JONGHYUN_TYPE,
+        FETCH_FESTIVALS,
+        FETCH_BOOKMARKS,
+        GET_FESTIVAL_DETAIL
     }
 
     public void fetchTestApi() {
@@ -124,6 +128,14 @@ public class ApiAction {
         for (ActionListener listener : actionListeners.get(ActionType.FETCH_BOOKMARKS)) {
             listener.onActionTriggered(result);
         }
+    }
+
+    public void getFestivalDetailInformation() {
+        int typeId = 15, contentId = 694576;
+        ApiManager.apiService.getFestivalCommonInformation(typeId, contentId).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
+        ApiManager.apiService.getFestivalDetailInformation(typeId, contentId).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
+        ApiManager.apiService.getFestivalSummaryInformation(typeId, contentId).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
+        ApiManager.apiService.getFestivalImageInformation(typeId, contentId).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
     }
 
 }
