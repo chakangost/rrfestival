@@ -25,11 +25,12 @@ public class BodyItem {
     private String     title;
     private String     zipcode;
 
-    public BodyItem(int contentId, String title, double lat, double lng, String firstimage) {
+    public BodyItem(int contentId, String title, double lat, double lng, String addr1, String firstimage) {
         this.contentid = contentId;
         this.title = title;
         this.mapy = lat;
         this.mapx = lng;
+        this.addr1 = addr1;
         this.firstimage = firstimage;
     }
 
