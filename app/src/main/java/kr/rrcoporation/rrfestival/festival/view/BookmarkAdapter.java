@@ -7,12 +7,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
-
 import java.util.List;
-
 import kr.rrcoporation.rrfestival.festival.R;
 import kr.rrcoporation.rrfestival.festival.model.BodyItem;
 

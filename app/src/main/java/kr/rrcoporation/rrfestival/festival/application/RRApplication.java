@@ -1,10 +1,9 @@
 package kr.rrcoporation.rrfestival.festival.application;
 
 import android.app.Activity;
+import android.os.StrictMode;
 import android.support.multidex.MultiDexApplication;
-
 import com.facebook.stetho.Stetho;
-
 import kr.rrcoporation.rrfestival.festival.BuildConfig;
 import kr.rrcoporation.rrfestival.festival.transaction.ApiAction;
 import kr.rrcoporation.rrfestival.festival.transaction.ApiManager;
@@ -17,6 +16,13 @@ public class RRApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        if (BuildConfig.DEBUG) {
+            StrictMode.VmPolicy policy = new StrictMode.VmPolicy.Builder()
+                    .detectAll()
+                    .penaltyLog()
+                    .build();
+            StrictMode.setVmPolicy(policy);
+        }
         instance = this;
         ApiManager.init();
         ApiAction.init(this);

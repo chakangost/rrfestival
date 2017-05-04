@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-
 import java.util.List;
 import kr.rrcoporation.rrfestival.festival.R;
 import kr.rrcoporation.rrfestival.festival.model.BodyItem;

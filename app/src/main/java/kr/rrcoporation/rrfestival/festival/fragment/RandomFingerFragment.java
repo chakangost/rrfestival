@@ -29,15 +29,15 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class RandomFingerFragment extends CommonFragment implements View.OnClickListener, CardStack.CardEventListener {
 
-    private        RelativeLayout   rootLayout;
-    private        CardStack        mCardStack;
-    private        CardsDataAdapter mCardAdapter;
-    private        Subscription     subscription;
-    private static List<BodyItem>   bodyItems;
-    private Gson gson = new Gson();
-    private SQLiteDatabase db;
+    private RelativeLayout   rootLayout;
+    private CardStack        mCardStack;
+    private CardsDataAdapter mCardAdapter;
+    private Subscription     subscription;
+    private SQLiteDatabase   db;
     private String TABLE = "festival";
     private int festivalsPosition;
+    private static List<BodyItem>   bodyItems;
+    private Gson gson = new Gson();
 
     @Nullable
     @Override
@@ -144,9 +144,6 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
         sb.append(str2);
 
         db.execSQL(sb.toString());
-
-        Toast.makeText(getActivity(), sb.toString() + "저장되었습니다.", Toast.LENGTH_SHORT).show();
-
         db.setTransactionSuccessful();
         db.endTransaction();
 
