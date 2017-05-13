@@ -1,13 +1,13 @@
 package kr.rrcoporation.rrfestival.festival.fragment;
 
 import android.Manifest;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.google.gson.Gson;
@@ -31,14 +31,13 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
-public class MapFragment extends CommonFragment implements MapView.MapViewEventListener, MapView.POIItemEventListener, MapView.CurrentLocationEventListener {
+public class MapFragment extends CommonFragment implements MapView.MapViewEventListener, MapView.POIItemEventListener, MapView.CurrentLocationEventListener, View.OnClickListener {
 
     private static FragmentContainerBottomCallback fragmentContainerBottomCallback;
     private        MapView                         mapView;
     private static List<BodyItem>                  bodyItems;
     private Gson gson = new Gson();
     private Subscription   subscription;
-    private SQLiteDatabase db;
 
     public void setPopulationFragmentCallback(FragmentContainerBottomCallback fragmentContainerBottomCallback) {
         MapFragment.fragmentContainerBottomCallback = fragmentContainerBottomCallback;
@@ -50,6 +49,7 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_map, null);
+        initView();
         observeFestivalStore();
         initPermission();
         return rootLayout;
@@ -67,7 +67,7 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
         } else {
             String festivalGsonStr = Util.getSharedPreference(getContext(), "FESTIVAL_LIST");
             FestivalResult festivalItem = gson.fromJson(festivalGsonStr, FestivalResult.class);
-            initView(new LinkedList<>(Arrays.asList(festivalItem.getResponse().getBody().getItems().getItem())), mapView);
+            initViewData(new LinkedList<>(Arrays.asList(festivalItem.getResponse().getBody().getItems().getItem())), mapView);
         }
     }
 
@@ -82,23 +82,24 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
     private void observeFestivalStore() {
         subscription = MyFestivalStore.getInstance().observe().observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<Void>() {
             @Override
-            public void onCompleted() {
-
-            }
+            public void onCompleted() {}
 
             @Override
-            public void onError(Throwable e) {
-
-            }
+            public void onError(Throwable e) {}
 
             @Override
             public void onNext(Void aVoid) {
                 List<BodyItem> festivals = MyFestivalStore.getInstance().getFestivals();
                 FestivalResult festivalResult = MyFestivalStore.getInstance().getFestivalResult();
                 Util.setSharedPreference(getContext(), "FESTIVAL_LIST", gson.toJson(festivalResult));
-                initView(festivals, mapView);
+                initViewData(festivals, mapView);
             }
         });
+    }
+
+    private void initView() {
+        rootLayout.findViewById(R.id.zoom_in_btn).setOnClickListener(this);
+        rootLayout.findViewById(R.id.zoom_out_btn).setOnClickListener(this);
     }
 
     private void initPermission() {
@@ -126,9 +127,10 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
         mapView.setPOIItemEventListener(this);
         mapView.setCurrentLocationEventListener(this);
         mapView.setShowCurrentLocationMarker(true);
+        mapView.MAX_ZOOM_LEVEL = -5.0F;
     }
 
-    private void initView(List<BodyItem> items, MapView mapView) {
+    private void initViewData(List<BodyItem> items, MapView mapView) {
         bodyItems = items;
         SystemClock.sleep(1000);
         mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
@@ -142,6 +144,18 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
             marker.setMarkerType(MapPOIItem.MarkerType.BluePin);
             marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin);
             mapView.addPOIItem(marker);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.zoom_in_btn:
+                mapView.setZoomLevel(mapView.getZoomLevel() - 1, true);
+                break;
+            case R.id.zoom_out_btn:
+                mapView.setZoomLevel(mapView.getZoomLevel() + 1, true);
+                break;
         }
     }
 
@@ -199,6 +213,7 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
 
     @Override
     public void onMapViewZoomLevelChanged(MapView mapView, int i) {
+
     }
 
     @Override
