@@ -27,7 +27,7 @@ public class CardsDataAdapter extends ArrayAdapter<String> {
     }
 
     @Override
-    public View getView(int position, final View contentView, ViewGroup parent){
+    public View getView(int position, final View contentView, ViewGroup parent) {
         View v = contentView;
         if (v == null) {
             v = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.festival_detail, parent, false);
@@ -40,7 +40,7 @@ public class CardsDataAdapter extends ArrayAdapter<String> {
         TextView tel = (TextView) v.findViewById(R.id.tel);
         final ImageView image = (ImageView) v.findViewById(R.id.image);
 
-        mGlideRequestManager.load(item.getFirstimage()).thumbnail(0.1f).error(R.mipmap.ic_launcher).into(image);
+        mGlideRequestManager.load(item.getFirstimage()).override(1500, 1500).error(R.mipmap.ic_launcher).into(image);
 
         title.setText(item.getTitle());
         address.setText(item.getAddr1());

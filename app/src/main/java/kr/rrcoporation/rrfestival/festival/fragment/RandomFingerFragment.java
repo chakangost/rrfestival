@@ -36,15 +36,15 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
     private SQLiteDatabase   db;
     private String TABLE = "festival";
     private int festivalsPosition;
-    private static List<BodyItem>   bodyItems;
+    private List<BodyItem>   bodyItems;
     private Gson gson = new Gson();
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        createDB();
         rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_random_finger, null);
         rootLayout.findViewById(R.id.btn_add_favorite).setOnClickListener(this);
+        createDB();
         settingCards();
         return rootLayout;
     }
@@ -56,7 +56,6 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
     @Override
     public void discarded(int i, int i1) {
         festivalsPosition = i;
-        Toast.makeText(getActivity(), "" + bodyItems.get(i).getTitle(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -97,21 +96,20 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
         } else {
             String festivalGsonStr = Util.getSharedPreference(getContext(), "FESTIVAL_LIST");
             FestivalResult festivalItem = gson.fromJson(festivalGsonStr, FestivalResult.class);
-            bodyItems = new LinkedList<>(Arrays.asList(festivalItem.getResponse().getBody().getItems().getItem()));
-
+            List<BodyItem> festivals = new LinkedList<>(Arrays.asList(festivalItem.getResponse().getBody().getItems().getItem()));
+            bodyItems = new ArrayList<>();
             mCardStack = (CardStack) rootLayout.findViewById(R.id.container);
             mCardStack.setContentResource(R.layout.festival_detail);
             mCardStack.setListener(this);
             mCardStack.setStackMargin(20);
 
-            List<BodyItem> festivals = new ArrayList<>();
-            for (BodyItem bodyItem : bodyItems) {
+            for (BodyItem bodyItem : festivals) {
                 if (bodyItem.getFirstimage() != null) {
-                    festivals.add(bodyItem);
+                    bodyItems.add(bodyItem);
                 }
             }
 
-            mCardAdapter = new CardsDataAdapter(getActivity().getApplicationContext(), festivals);
+            mCardAdapter = new CardsDataAdapter(getActivity().getApplicationContext(), bodyItems);
             mCardStack.setAdapter(mCardAdapter);
         }
     }
@@ -121,8 +119,9 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
         Cursor cursor = db.rawQuery(existDataQuery, null);
 
         int columnCnt = cursor.getCount();
-
+        cursor.close();
         if (columnCnt != 0) {
+            Toast.makeText(getActivity(), "이미 추가 되어있습니다.", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -148,6 +147,7 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
         db.endTransaction();
 
         ApiAction.getInstance().fetchBookmarks();
+        Toast.makeText(getActivity(), bodyItems.get(festivalsPosition).getTitle() + " : 추가됨", Toast.LENGTH_SHORT).show();
     }
 
     private void createDB() {
@@ -173,12 +173,18 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
             @Override
             public void onNext(Void aVoid) {
                 List<BodyItem> festivals = MyFestivalStore.getInstance().getFestivals();
+                bodyItems = new ArrayList<>();
+                for (BodyItem bodyItem : festivals) {
+                    if (bodyItem.getFirstimage() != null) {
+                        bodyItems.add(bodyItem);
+                    }
+                }
                 mCardStack = (CardStack) rootLayout.findViewById(R.id.container);
                 mCardStack.setContentResource(R.layout.festival_detail);
-
+                mCardStack.setListener(RandomFingerFragment.this);
                 mCardStack.setStackMargin(20);
 
-                mCardAdapter = new CardsDataAdapter(getActivity().getApplicationContext(), festivals);
+                mCardAdapter = new CardsDataAdapter(getActivity().getApplicationContext(), bodyItems);
                 mCardStack.setAdapter(mCardAdapter);
             }
         });

@@ -33,17 +33,15 @@ public class BookmarkAdapter extends BaseAdapter {
             holder = new BookmarkHolder();
             holder.title = (TextView) convertView.findViewById(R.id.title);
             holder.address = (TextView) convertView.findViewById(R.id.address);
-            holder.phone = (TextView) convertView.findViewById(R.id.phone);
             holder.thumnail = (ImageView) convertView.findViewById(R.id.thumnail);
             convertView.setTag(holder);
         } else {
             holder = (BookmarkHolder) convertView.getTag();
         }
 
-        holder.title.setText(list.get(position).getTel());
+        holder.title.setText(list.get(position).getTitle());
         holder.address.setText(list.get(position).getAddr1());
-        holder.phone.setText(list.get(position).getTel());
-        mGlideRequestManager.load(list.get(position).getFirstimage()).into(holder.thumnail);
+        mGlideRequestManager.load(list.get(position).getFirstimage()).override(300, 300).into(holder.thumnail);
         return convertView;
     }
 
@@ -65,7 +63,6 @@ public class BookmarkAdapter extends BaseAdapter {
     class BookmarkHolder {
         TextView title;
         TextView address;
-        TextView phone;
         ImageView thumnail;
     }
 }

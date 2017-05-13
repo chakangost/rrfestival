@@ -111,11 +111,15 @@ public class ApiAction {
     public void fetchBookmarks() {
         List<BodyItem> result = new ArrayList<>();
         apiDB = context.openOrCreateDatabase("FESTIVALS.db", Context.MODE_PRIVATE, null);
+        if (!apiDB.isOpen()) {
+            return;
+        }
         String query = "select * from festival;";
         Cursor cursor = apiDB.rawQuery(query, null);
         while (cursor.moveToNext()) {
             result.add(new BodyItem(Integer.valueOf(cursor.getString(cursor.getColumnIndex("contentid"))), cursor.getString(cursor.getColumnIndex("title")), Double.valueOf(cursor.getString(cursor.getColumnIndex("lat"))), Double.valueOf(cursor.getString(cursor.getColumnIndex("lng"))), cursor.getString(cursor.getColumnIndex("addr1")), cursor.getString(cursor.getColumnIndex("firstimage"))));
         }
+        cursor.close();
 
         for (ActionListener listener : actionListeners.get(ActionType.FETCH_BOOKMARKS)) {
             listener.onActionTriggered(result);
