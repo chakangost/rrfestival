@@ -44,6 +44,7 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_random_finger, null);
         rootLayout.findViewById(R.id.btn_add_favorite).setOnClickListener(this);
+        rootLayout.findViewById(R.id.current_position_btn).setOnClickListener(this);
         createDB();
         settingCards();
         return rootLayout;
@@ -78,6 +79,9 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
         switch (v.getId()) {
             case R.id.btn_add_favorite:
                 saveBookmark();
+                break;
+            case R.id.current_position_btn:
+                MapFragment.newInstance(bodyItems.get(festivalsPosition).getMapy(), bodyItems.get(festivalsPosition).getMapx(), "FROM_FINGER");
                 break;
         }
     }

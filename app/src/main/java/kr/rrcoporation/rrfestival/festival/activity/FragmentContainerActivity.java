@@ -124,12 +124,14 @@ public class FragmentContainerActivity extends CommonFragmentActivity implements
 
     @Override
     public void SetOnCurrentFragment(int status) {
-        viewPager.setCurrentItem(0);
+        viewPager.setCurrentItem(status);
     }
 
     @Override
-    public void OnBottomCallBback() {
-        setActivedBottomTab(bottomMapImg, bottomMapTv, 0);
+    public void OnBottomCallBback(int status) {
+        ImageView[] bottomImages = {bottomMapImg, bottomFavoriteImg, bottomPopulationImg, bottomSettingImg};
+        TextView[] bottomTexts = {bottomMapTv, bottomFavoriteTv, bottomPopulationTv, bottomSettingTv};
+        setActivedBottomTab(bottomImages[status], bottomTexts[status], status);
     }
 
     @Override

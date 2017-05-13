@@ -34,16 +34,43 @@ import rx.android.schedulers.AndroidSchedulers;
 public class MapFragment extends CommonFragment implements MapView.MapViewEventListener, MapView.POIItemEventListener, MapView.CurrentLocationEventListener, View.OnClickListener {
 
     private static FragmentContainerBottomCallback fragmentContainerBottomCallback;
-    private        MapView                         mapView;
+    private static MapView                         mapView;
     private static List<BodyItem>                  bodyItems;
+    private        Subscription subscription;
+    private static MapFragment  mapFragment;
     private Gson gson = new Gson();
-    private Subscription   subscription;
 
     public void setPopulationFragmentCallback(FragmentContainerBottomCallback fragmentContainerBottomCallback) {
         MapFragment.fragmentContainerBottomCallback = fragmentContainerBottomCallback;
     }
 
     private LinearLayout rootLayout;
+
+    public static void newInstance(double lat, double lng, String flag) {
+        mapFragment = new MapFragment();
+        Bundle args = new Bundle();
+        args.putDouble("mapY", lat);
+        args.putDouble("mapX", lng);
+        args.putString("flag", flag);
+        mapFragment.setArguments(args);
+
+        if (fragmentContainerBottomCallback != null) {
+            fragmentContainerBottomCallback.OnBottomCallBback(2);
+            fragmentContainerBottomCallback.SetOnCurrentFragment(2);
+        }
+
+        if (mapFragment !=null && mapFragment.getArguments() != null) {
+            try {
+                if (mapFragment.getArguments().getString("flag").equals("FROM_FINGER")) {
+                    mapView.setMapCenterPointAndZoomLevel(MapPoint.mapPointWithGeoCoord((double)mapFragment.getArguments().get("mapY"),
+                            (double)mapFragment.getArguments().get("mapX")), 3, true);
+                }
+                mapFragment.setArguments(null);
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     @Nullable
     @Override
