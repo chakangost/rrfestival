@@ -17,11 +17,13 @@ package kr.rrcoporation.rrfestival.festival.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
 import kr.rrcoporation.rrfestival.festival.R;
+import kr.rrcoporation.rrfestival.festival.adapter.DetailImageAdapter;
 import kr.rrcoporation.rrfestival.festival.model.DetailInformation;
 import kr.rrcoporation.rrfestival.festival.transaction.ApiAction;
 import rx.Observer;
@@ -33,6 +35,8 @@ public class FestivalDetailActivity extends CommonFragmentActivity implements Vi
     private Toolbar                 toolbar;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private DetailInformation       detailInformation;
+    private ViewPager               imageViewPager;
+    private DetailImageAdapter      imageAdapter;
 
     private TextView eventDate;
 
@@ -72,6 +76,8 @@ public class FestivalDetailActivity extends CommonFragmentActivity implements Vi
             public void onNext(DetailInformation o) {
                 detailInformation = o;
                 eventDate.setText(detailInformation.getEventDate());
+                imageAdapter = DetailImageAdapter.newInstance(FestivalDetailActivity.this, detailInformation.getImages());
+                imageViewPager.setAdapter(imageAdapter);
             }
         });
     }
@@ -81,6 +87,7 @@ public class FestivalDetailActivity extends CommonFragmentActivity implements Vi
 
     private void initializeField() {
         eventDate = (TextView) findViewById(R.id.textview_event_date);
+        imageViewPager = (ViewPager) findViewById(R.id.viewpager_image);
     }
 
     @Override

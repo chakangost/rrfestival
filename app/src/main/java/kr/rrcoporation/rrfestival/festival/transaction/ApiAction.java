@@ -20,7 +20,6 @@ import kr.rrcoporation.rrfestival.festival.model.FestivalResult;
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
 import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func4;
 import rx.schedulers.Schedulers;
 
@@ -141,10 +140,10 @@ public class ApiAction {
 
     public Observable getFestivalDetailInformation() {
         int typeId = 15, contentId = 694576;
-        Observable<JsonObject> commonObservable = ApiManager.apiService.getFestivalCommonInformation(typeId, contentId).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
-        Observable<JsonObject> detailObservable = ApiManager.apiService.getFestivalDetailInformation(typeId, contentId).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
-        Observable<JsonObject> summaryObservable = ApiManager.apiService.getFestivalSummaryInformation(typeId, contentId).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
-        Observable<JsonObject> imageObservable = ApiManager.apiService.getFestivalImageInformation(typeId, contentId).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
+        Observable<JsonObject> commonObservable = ApiManager.apiService.getFestivalCommonInformation(typeId, contentId);
+        Observable<JsonObject> detailObservable = ApiManager.apiService.getFestivalDetailInformation(typeId, contentId);
+        Observable<JsonObject> summaryObservable = ApiManager.apiService.getFestivalSummaryInformation(typeId, contentId);
+        Observable<JsonObject> imageObservable = ApiManager.apiService.getFestivalImageInformation(typeId, contentId);
         return Observable.combineLatest(commonObservable, detailObservable, summaryObservable, imageObservable, new Func4<JsonObject, JsonObject, JsonObject, JsonObject, Object>() {
             @Override
             public DetailInformation call(JsonObject jsonObject, JsonObject jsonObject2, JsonObject jsonObject3, JsonObject jsonObject4) {

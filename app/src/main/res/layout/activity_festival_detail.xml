@@ -20,9 +20,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:contentScrim="?attr/colorPrimary">
+            app:contentScrim="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
             <android.support.v4.view.ViewPager
+                android:id="@+id/viewpager_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/com_facebook_button_like_background">
@@ -32,7 +34,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin" />
+                app:layout_collapseMode="pin"/>
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -46,30 +48,157 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="36dp"
+            android:orientation="vertical"
+            android:paddingBottom="16dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:paddingBottom="16dp"
-            android:orientation="vertical">
+            android:paddingTop="36dp">
 
-            <TextView
-                android:id="@+id/textview_event_date"
+            <LinearLayout
+                android:layout_marginBottom="@dimen/detail_item_padding_bottom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="test1" />
+                android:orientation="horizontal">
 
-            <TextView
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="행사기간 : "/>
+
+                <TextView
+                    android:id="@+id/textview_event_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="test1"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginBottom="@dimen/detail_item_padding_bottom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="test2" />
+                android:orientation="horizontal">
 
-            <TextView
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="주소 : "/>
+
+                <TextView
+                    android:id="@+id/textview_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="test2"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginBottom="@dimen/detail_item_padding_bottom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="test3" />
+                android:orientation="horizontal">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="전화번호 : "/>
+
+                <TextView
+                    android:id="@+id/textview_tel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="test2"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginBottom="@dimen/detail_item_padding_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="행사정보 : "/>
+
+                <TextView
+                    android:id="@+id/textview_program"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="test2"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginBottom="@dimen/detail_item_padding_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="기타행사정보 : "/>
+
+                <TextView
+                    android:id="@+id/textview_subevent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="test2"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginBottom="@dimen/detail_item_padding_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="유무료 : "/>
+
+                <TextView
+                    android:id="@+id/textview_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="test2"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginBottom="@dimen/detail_item_padding_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="행사소개 : "/>
+
+                <TextView
+                    android:id="@+id/textview_summary_intro"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:text="test2"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginBottom="@dimen/detail_item_padding_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="행사정보 : "/>
+
+                <TextView
+                    android:id="@+id/textview_summary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:text="test2"/>
+            </LinearLayout>
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
@@ -78,9 +207,9 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:backgroundTint="#033241"
-        android:src="@drawable/btn_plus_f"
         android:layout_margin="16dp"
+        android:src="@drawable/ic_star_rate_white_18dp"
+        app:backgroundTint="#033241"
         app:layout_anchor="@+id/app_bar"
         app:layout_anchorGravity="bottom|right|end"
         />
