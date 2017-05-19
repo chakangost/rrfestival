@@ -21,11 +21,6 @@
         <activity android:name=".activity.AuthActivity">
         </activity>
         <activity android:name=".activity.LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
         <activity android:name=".activity.SplashActivity"
             android:screenOrientation="portrait">
@@ -38,6 +33,7 @@
         <activity
             android:name=".activity.FestivalDetailActivity"
             android:screenOrientation="portrait"
+            android:label="Detail"
             android:theme="@style/AppTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

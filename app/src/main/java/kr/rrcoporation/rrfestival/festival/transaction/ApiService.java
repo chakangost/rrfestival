@@ -1,5 +1,7 @@
 package kr.rrcoporation.rrfestival.festival.transaction;
 
+import com.google.gson.JsonObject;
+
 import kr.rrcoporation.rrfestival.festival.model.FestivalResult;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -30,25 +32,25 @@ public interface ApiService {
 
     //기본상세정보
     @GET("openapi/service/rest/KorService/detailCommon")
-    Observable<FestivalResult> getFestivalCommonInformation(
+    Observable<JsonObject> getFestivalCommonInformation(
             @Query("contentTypeId") int contentTypeId, //@NotNull
             @Query("contentId") int contentId
     );
     //자세한 정보(주최 주관 행사시작 종료일 등)
     @GET("openapi/service/rest/KorService/detailIntro")
-    Observable<FestivalResult> getFestivalDetailInformation(
+    Observable<JsonObject> getFestivalDetailInformation(
             @Query("contentTypeId") int contentTypeId, //@NotNull
             @Query("contentId") int contentId
     );
     //행사 요약(반복정보)
     @GET("openapi/service/rest/KorService/detailInfo")
-    Observable<FestivalResult> getFestivalSummaryInformation(
+    Observable<JsonObject> getFestivalSummaryInformation(
             @Query("contentTypeId") int contentTypeId, //@NotNull
             @Query("contentId") int contentId
     );
     //추가 이미지.
     @GET("openapi/service/rest/KorService/detailImage")
-    Observable<FestivalResult> getFestivalImageInformation(
+    Observable<JsonObject> getFestivalImageInformation(
             @Query("contentTypeId") int contentTypeId, //@NotNull
             @Query("contentId") int contentId
     );

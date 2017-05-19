@@ -19,14 +19,22 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.TextView;
 
 import kr.rrcoporation.rrfestival.festival.R;
+import kr.rrcoporation.rrfestival.festival.model.DetailInformation;
+import kr.rrcoporation.rrfestival.festival.transaction.ApiAction;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
 
 public class FestivalDetailActivity extends CommonFragmentActivity implements View.OnClickListener {
 
     private static final String TAG = "FestivalDetailActivity";
-    private Toolbar toolbar;
+    private Toolbar                 toolbar;
     private CollapsingToolbarLayout collapsingToolbarLayout;
+    private DetailInformation       detailInformation;
+
+    private TextView eventDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +57,30 @@ public class FestivalDetailActivity extends CommonFragmentActivity implements Vi
 
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbarLayout.setTitle("Details");
+        ApiAction.getInstance().getFestivalDetailInformation().observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<DetailInformation>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(DetailInformation o) {
+                detailInformation = o;
+                eventDate.setText(detailInformation.getEventDate());
+            }
+        });
     }
 
     private void initializeListener() {
     }
 
     private void initializeField() {
+        eventDate = (TextView) findViewById(R.id.textview_event_date);
     }
 
     @Override
@@ -72,8 +98,8 @@ public class FestivalDetailActivity extends CommonFragmentActivity implements Vi
     public void onClick(View v) {
         int id = v.getId();
 
-        switch ( id ) {
-            case R.id.button_facebook :
+        switch (id) {
+            case R.id.button_facebook:
                 break;
         }
     }

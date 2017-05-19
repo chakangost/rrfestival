@@ -4,15 +4,24 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import kr.rrcoporation.rrfestival.festival.model.BodyItem;
+import kr.rrcoporation.rrfestival.festival.model.DetailInformation;
 import kr.rrcoporation.rrfestival.festival.model.FestivalResult;
 import retrofit2.adapter.rxjava.HttpException;
+import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func4;
 import rx.schedulers.Schedulers;
 
 public class ApiAction {
@@ -130,12 +139,28 @@ public class ApiAction {
         }
     }
 
-    public void getFestivalDetailInformation() {
+    public Observable getFestivalDetailInformation() {
         int typeId = 15, contentId = 694576;
-        ApiManager.apiService.getFestivalCommonInformation(typeId, contentId).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
-        ApiManager.apiService.getFestivalDetailInformation(typeId, contentId).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
-        ApiManager.apiService.getFestivalSummaryInformation(typeId, contentId).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
-        ApiManager.apiService.getFestivalImageInformation(typeId, contentId).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
+        Observable<JsonObject> commonObservable = ApiManager.apiService.getFestivalCommonInformation(typeId, contentId).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
+        Observable<JsonObject> detailObservable = ApiManager.apiService.getFestivalDetailInformation(typeId, contentId).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
+        Observable<JsonObject> summaryObservable = ApiManager.apiService.getFestivalSummaryInformation(typeId, contentId).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
+        Observable<JsonObject> imageObservable = ApiManager.apiService.getFestivalImageInformation(typeId, contentId).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
+        return Observable.combineLatest(commonObservable, detailObservable, summaryObservable, imageObservable, new Func4<JsonObject, JsonObject, JsonObject, JsonObject, Object>() {
+            @Override
+            public DetailInformation call(JsonObject jsonObject, JsonObject jsonObject2, JsonObject jsonObject3, JsonObject jsonObject4) {
+                Gson gson = new Gson();
+                JsonObject combinedJsonObject = new JsonObject();
+                for(Map.Entry<String, JsonElement> c : jsonObject.getAsJsonObject("response").getAsJsonObject("body").getAsJsonObject("items").getAsJsonObject("item").entrySet()) {
+                    combinedJsonObject.add(c.getKey(), c.getValue());
+                }
+                for(Map.Entry<String, JsonElement> c : jsonObject2.getAsJsonObject("response").getAsJsonObject("body").getAsJsonObject("items").getAsJsonObject("item").entrySet()) {
+                    combinedJsonObject.add(c.getKey(), c.getValue());
+                }
+                combinedJsonObject.add("summaries", jsonObject3.getAsJsonObject("response").getAsJsonObject("body").getAsJsonObject("items").getAsJsonArray("item"));
+                combinedJsonObject.add("images", jsonObject4.getAsJsonObject("response").getAsJsonObject("body").getAsJsonObject("items").getAsJsonArray("item"));
+                return gson.fromJson(combinedJsonObject, DetailInformation.class);
+                }
+        });
     }
 
 }
