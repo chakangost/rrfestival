@@ -28,6 +28,7 @@ import kr.rrcoporation.rrfestival.festival.model.DetailInformation;
 import kr.rrcoporation.rrfestival.festival.transaction.ApiAction;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class FestivalDetailActivity extends CommonFragmentActivity implements View.OnClickListener {
 
@@ -61,7 +62,7 @@ public class FestivalDetailActivity extends CommonFragmentActivity implements Vi
 
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbarLayout.setTitle("Details");
-        ApiAction.getInstance().getFestivalDetailInformation().observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<DetailInformation>() {
+        ApiAction.getInstance().getFestivalDetailInformation().subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<DetailInformation>() {
             @Override
             public void onCompleted() {
 
