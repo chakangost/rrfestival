@@ -19,12 +19,14 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.View;
 import android.widget.TextView;
 
 import kr.rrcoporation.rrfestival.festival.R;
 import kr.rrcoporation.rrfestival.festival.adapter.DetailImageAdapter;
 import kr.rrcoporation.rrfestival.festival.model.DetailInformation;
+import kr.rrcoporation.rrfestival.festival.model.DetailSummary;
 import kr.rrcoporation.rrfestival.festival.transaction.ApiAction;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -40,6 +42,12 @@ public class FestivalDetailActivity extends CommonFragmentActivity implements Vi
     private DetailImageAdapter      imageAdapter;
 
     private TextView eventDate;
+    private TextView address;
+    private TextView program;
+    private TextView subEvent;
+    private TextView payType;
+    private TextView summaryIntro;
+    private TextView telephone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +69,6 @@ public class FestivalDetailActivity extends CommonFragmentActivity implements Vi
         setSupportActionBar(toolbar);
 
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        collapsingToolbarLayout.setTitle("Details");
         ApiAction.getInstance().getFestivalDetailInformation().subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<DetailInformation>() {
             @Override
             public void onCompleted() {
@@ -76,9 +83,7 @@ public class FestivalDetailActivity extends CommonFragmentActivity implements Vi
             @Override
             public void onNext(DetailInformation o) {
                 detailInformation = o;
-                eventDate.setText(detailInformation.getEventDate());
-                imageAdapter = DetailImageAdapter.newInstance(FestivalDetailActivity.this, detailInformation.getImages());
-                imageViewPager.setAdapter(imageAdapter);
+                renderDetailView();
             }
         });
     }
@@ -88,7 +93,35 @@ public class FestivalDetailActivity extends CommonFragmentActivity implements Vi
 
     private void initializeField() {
         eventDate = (TextView) findViewById(R.id.textview_event_date);
+        address = (TextView) findViewById(R.id.textview_address);
+        telephone = (TextView) findViewById(R.id.textview_tel);
+        program = (TextView) findViewById(R.id.textview_program);
+        subEvent = (TextView) findViewById(R.id.textview_subevent);
+        payType = (TextView) findViewById(R.id.textview_type);
+        summaryIntro = (TextView) findViewById(R.id.textview_summary_intro);
         imageViewPager = (ViewPager) findViewById(R.id.viewpager_image);
+    }
+
+    private void renderDetailView() {
+
+        collapsingToolbarLayout.setTitle(detailInformation.getTitle());
+        eventDate.setText(detailInformation.getEventDate());
+        address.setText(detailInformation.getAddr1() + " " + detailInformation.getAddr2());
+        telephone.setText(detailInformation.getTel());
+        program.setText(detailInformation.getProgram());
+        subEvent.setText(detailInformation.getSubEvent());
+        payType.setText(detailInformation.getType());
+
+        String summary = "";
+
+        for(DetailSummary c : detailInformation.getSummaries()) {
+            summary += c.getInfoname() + "<br/>";
+            summary += c.getInfotext() + "<br/>";
+        }
+        summaryIntro.setText(Html.fromHtml(summary));
+        imageAdapter = DetailImageAdapter.newInstance(FestivalDetailActivity.this, detailInformation.getImages());
+        imageViewPager.setAdapter(imageAdapter);
+        imageViewPager.setCurrentItem(detailInformation.getImages().size() * 1000);
     }
 
     @Override

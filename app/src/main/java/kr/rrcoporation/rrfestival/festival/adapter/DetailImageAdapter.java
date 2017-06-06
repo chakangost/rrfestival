@@ -45,16 +45,22 @@ public class DetailImageAdapter extends PagerAdapter {
         if(mImageList == null) {
             return 0;
         }
-        return mImageList.size();
+        return Integer.MAX_VALUE;
     }
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
 
         int infinityPosition = position % mImageList.size();
-        ImageView view = (ImageView) mInflater.inflate(R.layout.view_image, null);
-        mGlideRequestManager.load(mImageList.get(position).getSmallimageurl()).thumbnail(0.5f).error(R.drawable.thum_nodata).into(view);
+        ImageView view = (ImageView) mInflater.inflate(R.layout.view_image, container, false);
+        mGlideRequestManager.load(mImageList.get(infinityPosition).getOriginimgurl()).thumbnail(0.5f).error(R.drawable.thum_nodata).into(view);
+        container.addView(view);
         return view;
+    }
+
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object view) {
+        container.removeView((View) view);
     }
 
     @Override
