@@ -67,39 +67,10 @@ public class FragmentContainerActivity extends CommonFragmentActivity implements
         // under add setting
         for (int i = 0; i < bottomBarStrs.length; i++) {
             models.add(new NavigationTabBar.Model.Builder(ContextCompat.getDrawable(getApplicationContext(), bottomBarImgs[i]), Color.parseColor(colors[i]))
-                    .title(bottomBarStrs[i]).build());
+                    .title(bottomBarStrs[i]).badgeTitle(null).build());
         }
-
         navigationTabBar.setModels(models);
         navigationTabBar.setViewPager(viewPager, 0);
-        navigationTabBar.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-            @Override
-            public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {}
-
-            @Override
-            public void onPageSelected(final int position) {
-                navigationTabBar.getModels().get(position).hideBadge();
-            }
-
-            @Override
-            public void onPageScrollStateChanged(final int state) {}
-        });
-
-        navigationTabBar.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 0; i < navigationTabBar.getModels().size(); i++) {
-                    final NavigationTabBar.Model model = navigationTabBar.getModels().get(i);
-                    navigationTabBar.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            model.showBadge();
-                        }
-                    }, i * 100);
-                }
-            }
-        }, 500);
     }
 
     @Override
