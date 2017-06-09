@@ -144,7 +144,7 @@ public class ApiAction {
         Observable<JsonObject> detailObservable = ApiManager.apiService.getFestivalDetailInformation(typeId, contentId);
         Observable<JsonObject> summaryObservable = ApiManager.apiService.getFestivalSummaryInformation(typeId, contentId);
         Observable<JsonObject> imageObservable = ApiManager.apiService.getFestivalImageInformation(typeId, contentId);
-        return Observable.combineLatest(commonObservable, detailObservable, summaryObservable, imageObservable, new Func4<JsonObject, JsonObject, JsonObject, JsonObject, Object>() {
+        return Observable.zip(commonObservable, detailObservable, summaryObservable, imageObservable, new Func4<JsonObject, JsonObject, JsonObject, JsonObject, Object>() {
             @Override
             public DetailInformation call(JsonObject jsonObject, JsonObject jsonObject2, JsonObject jsonObject3, JsonObject jsonObject4) {
                 Gson gson = new Gson();
@@ -156,7 +156,10 @@ public class ApiAction {
                     combinedJsonObject.add(c.getKey(), c.getValue());
                 }
                 combinedJsonObject.add("summaries", jsonObject3.getAsJsonObject("response").getAsJsonObject("body").getAsJsonObject("items").getAsJsonArray("item"));
-                combinedJsonObject.add("images", jsonObject4.getAsJsonObject("response").getAsJsonObject("body").getAsJsonObject("items").getAsJsonArray("item"));
+                if("0".equals(jsonObject4.getAsJsonObject("response").getAsJsonObject("body").get("totalCount").toString())) {
+
+                    combinedJsonObject.add("images", jsonObject4.getAsJsonObject("response").getAsJsonObject("body").getAsJsonObject("items").getAsJsonArray("item"));
+                }
                 return gson.fromJson(combinedJsonObject, DetailInformation.class);
                 }
         });
