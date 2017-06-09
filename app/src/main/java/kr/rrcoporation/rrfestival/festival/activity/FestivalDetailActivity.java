@@ -22,7 +22,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.View;
 import android.widget.TextView;
-
 import kr.rrcoporation.rrfestival.festival.R;
 import kr.rrcoporation.rrfestival.festival.adapter.DetailImageAdapter;
 import kr.rrcoporation.rrfestival.festival.model.DetailInformation;
