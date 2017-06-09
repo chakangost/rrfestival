@@ -26,6 +26,7 @@ import kr.rrcoporation.rrfestival.festival.R;
 import kr.rrcoporation.rrfestival.festival.adapter.DetailImageAdapter;
 import kr.rrcoporation.rrfestival.festival.model.DetailInformation;
 import kr.rrcoporation.rrfestival.festival.model.DetailSummary;
+import kr.rrcoporation.rrfestival.festival.model.ExtraConstants;
 import kr.rrcoporation.rrfestival.festival.transaction.ApiAction;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -66,9 +67,13 @@ public class FestivalDetailActivity extends CommonFragmentActivity implements Vi
     private void intializeView() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        Bundle bundle = getIntent().getExtras();
+        int typeId = bundle.getInt(ExtraConstants.EXTRA_CONTENT_TYPE_ID);
+        int contentId = bundle.getInt(ExtraConstants.EXTRA_CONTENT_ID);
+
 
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        ApiAction.getInstance().getFestivalDetailInformation().subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<DetailInformation>() {
+        ApiAction.getInstance().getFestivalDetailInformation(typeId, contentId).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<DetailInformation>() {
             @Override
             public void onCompleted() {
 

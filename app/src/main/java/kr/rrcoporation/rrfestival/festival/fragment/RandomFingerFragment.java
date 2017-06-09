@@ -1,6 +1,7 @@
 package kr.rrcoporation.rrfestival.festival.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -10,14 +11,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
 import com.google.gson.Gson;
 import com.wenchao.cardstack.CardStack;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+
 import kr.rrcoporation.rrfestival.festival.R;
+import kr.rrcoporation.rrfestival.festival.activity.FestivalDetailActivity;
 import kr.rrcoporation.rrfestival.festival.model.BodyItem;
+import kr.rrcoporation.rrfestival.festival.model.ExtraConstants;
 import kr.rrcoporation.rrfestival.festival.model.FestivalResult;
 import kr.rrcoporation.rrfestival.festival.store.MyFestivalStore;
 import kr.rrcoporation.rrfestival.festival.transaction.ApiAction;
@@ -52,6 +58,11 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
 
     @Override
     public void topCardTapped() {
+        Intent intent = new Intent(getActivity(), FestivalDetailActivity.class);
+        BodyItem item = bodyItems.get(festivalsPosition);
+        intent.putExtra(ExtraConstants.EXTRA_CONTENT_TYPE_ID, item.getContenttypeid());
+        intent.putExtra(ExtraConstants.EXTRA_CONTENT_ID, item.getContentid());
+        startActivity(intent);
     }
 
     @Override
@@ -104,6 +115,7 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
             bodyItems = new ArrayList<>();
             mCardStack = (CardStack) rootLayout.findViewById(R.id.container);
             mCardStack.setContentResource(R.layout.festival_detail);
+            mCardStack.setListener(this);
             mCardStack.setListener(this);
             mCardStack.setStackMargin(20);
 

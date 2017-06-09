@@ -7,9 +7,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
+
 import java.util.List;
+
 import kr.rrcoporation.rrfestival.festival.R;
 import kr.rrcoporation.rrfestival.festival.model.BodyItem;
 
@@ -33,18 +36,18 @@ public class CardsDataAdapter extends ArrayAdapter<String> {
             v = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.festival_detail, parent, false);
         }
 
-        BodyItem item = festivals.get(position);
+        BodyItem bodyItem = festivals.get(position);
 
         TextView title = (TextView) v.findViewById(R.id.content);
         TextView address = (TextView) v.findViewById(R.id.address);
         TextView tel = (TextView) v.findViewById(R.id.tel);
         final ImageView image = (ImageView) v.findViewById(R.id.image);
 
-        mGlideRequestManager.load(item.getFirstimage()).override(1500, 1500).error(R.mipmap.ic_launcher).into(image);
+        mGlideRequestManager.load(bodyItem.getFirstimage()).override(1500, 1500).error(R.mipmap.ic_launcher).into(image);
 
-        title.setText(item.getTitle());
-        address.setText(item.getAddr1());
-        tel.setText(item.getTel());
+        title.setText(bodyItem.getTitle());
+        address.setText(bodyItem.getAddr1());
+        tel.setText(bodyItem.getTel());
 
         return contentView;
     }
@@ -58,5 +61,4 @@ public class CardsDataAdapter extends ArrayAdapter<String> {
     public int getCount() {
         return festivals.size();
     }
-
 }

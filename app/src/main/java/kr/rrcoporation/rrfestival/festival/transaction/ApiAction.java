@@ -138,8 +138,8 @@ public class ApiAction {
         }
     }
 
-    public Observable getFestivalDetailInformation() {
-        int typeId = 15, contentId = 694576;
+    public Observable getFestivalDetailInformation(int typeId, int contentId) {
+
         Observable<JsonObject> commonObservable = ApiManager.apiService.getFestivalCommonInformation(typeId, contentId);
         Observable<JsonObject> detailObservable = ApiManager.apiService.getFestivalDetailInformation(typeId, contentId);
         Observable<JsonObject> summaryObservable = ApiManager.apiService.getFestivalSummaryInformation(typeId, contentId);
