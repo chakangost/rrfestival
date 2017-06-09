@@ -1,5 +1,6 @@
 package kr.rrcoporation.rrfestival.festival.activity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -7,11 +8,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.widget.Toast;
+import java.util.ArrayList;
+import devlight.io.library.ntb.NavigationTabBar;
 import kr.rrcoporation.rrfestival.festival.R;
 import kr.rrcoporation.rrfestival.festival.callback.FragmentContainerBottomCallback;
 import kr.rrcoporation.rrfestival.festival.fragment.FavFragment;
@@ -20,27 +21,16 @@ import kr.rrcoporation.rrfestival.festival.fragment.RandomFingerFragment;
 import kr.rrcoporation.rrfestival.festival.fragment.SettingFragment;
 import kr.rrcoporation.rrfestival.festival.view.FreezingViewPager;
 
-public class FragmentContainerActivity extends CommonFragmentActivity implements FragmentContainerBottomCallback, View.OnClickListener {
+public class FragmentContainerActivity extends CommonFragmentActivity implements FragmentContainerBottomCallback {
 
     private boolean backFlag;
     private Handler backHandler;
     private int MAX_PAGE=4;
     private FreezingViewPager viewPager;
     private Fragment[] fragments = {new RandomFingerFragment(), new FavFragment(), new MapFragment(), new SettingFragment()};
-    private int[] bottomBarImgs = {R.drawable.tab_map_on, R.drawable.tab_like_on, R.drawable.tab_popu_on, R.drawable.tab_sett_on};
-    private ImageView bottomMapImg;
-    private ImageView bottomFavoriteImg;
-    private ImageView bottomPopulationImg;
-    private ImageView bottomSettingImg;
-    private TextView bottomMapTv;
-    private TextView bottomFavoriteTv;
-    private TextView bottomPopulationTv;
-    private TextView bottomSettingTv;
-    private LinearLayout bottomLayout;
-    private LinearLayout bottomMapLayout;
-    private LinearLayout bottomFavLayout;
-    private LinearLayout bottomRandomFingerLayout;
-    private LinearLayout bottomSettingLayout;
+    private int[] bottomBarImgs = {R.drawable.ic_second, R.drawable.ic_first, R.drawable.ic_fourth, R.drawable.ic_third};
+    private String[] bottomBarStrs = {"Random", "Favorite", "Map", "Setting"};
+    private NavigationTabBar navigationTabBar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,24 +45,9 @@ public class FragmentContainerActivity extends CommonFragmentActivity implements
             }
         };
         initView();
-        initListener();
     }
 
     private void initView() {
-        bottomMapImg = (ImageView) findViewById(R.id.bottom_map_img);
-        bottomFavoriteImg = (ImageView) findViewById(R.id.bottom_favorite_img);
-        bottomPopulationImg = (ImageView) findViewById(R.id.bottom_population_img);
-        bottomSettingImg = (ImageView) findViewById(R.id.bottom_setting_img);
-        bottomMapTv = (TextView) findViewById(R.id.bottom_map_tv);
-        bottomFavoriteTv = (TextView) findViewById(R.id.bottom_favorite_tv);
-        bottomPopulationTv = (TextView) findViewById(R.id.bottom_population_tv);
-        bottomSettingTv = (TextView) findViewById(R.id.bottom_setting_tv);
-        bottomLayout = (LinearLayout) findViewById(R.id.group_bottom_layout);
-        bottomMapLayout = (LinearLayout) findViewById(R.id.bottom_map_layout);
-        bottomFavLayout = (LinearLayout) findViewById(R.id.bottom_favorite_layout);
-        bottomRandomFingerLayout = (LinearLayout) findViewById(R.id.bottom_top_population_layout);
-        bottomSettingLayout = (LinearLayout) findViewById(R.id.bottom_setting_layout);
-
         ContainerAdapter adapter = new ContainerAdapter(getSupportFragmentManager());
         viewPager = (FreezingViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(adapter);
@@ -82,44 +57,49 @@ public class FragmentContainerActivity extends CommonFragmentActivity implements
 
         MapFragment pf = new MapFragment();
         pf.setPopulationFragmentCallback(this);
-    }
 
-    private void initListener() {
-        bottomMapLayout.setOnClickListener(this);
-        bottomFavLayout.setOnClickListener(this);
-        bottomRandomFingerLayout.setOnClickListener(this);
-        bottomSettingLayout.setOnClickListener(this);
-    }
+        final String[] colors = getResources().getStringArray(R.array.default_preview);
+        navigationTabBar = (NavigationTabBar) findViewById(R.id.ntb_horizontal);
+        final ArrayList<NavigationTabBar.Model> models = new ArrayList<>();
 
-    @Override
-    public void onClick(View v) {
-        switch(v.getId()) {
-            case R.id.bottom_map_layout:
-                viewPager.setCurrentItem(0);
-                setActivedBottomTab(bottomMapImg, bottomMapTv, 0);
-                break;
-            case R.id.bottom_favorite_layout:
-                viewPager.setCurrentItem(1);
-                setActivedBottomTab(bottomFavoriteImg, bottomFavoriteTv, 1);
-                break;
-            case R.id.bottom_top_population_layout:
-                viewPager.setCurrentItem(2);
-                setActivedBottomTab(bottomPopulationImg, bottomPopulationTv, 2);
-                break;
-            case R.id.bottom_setting_layout:
-                viewPager.setCurrentItem(3);
-                setActivedBottomTab(bottomSettingImg, bottomSettingTv, 3);
-                break;
+        // .selectedIcon(getResources().getDrawable(R.drawable.ic_sixth))
+        // .badgeTitle("NTB") // 알림 뱃지
+        // under add setting
+        for (int i = 0; i < bottomBarStrs.length; i++) {
+            models.add(new NavigationTabBar.Model.Builder(ContextCompat.getDrawable(getApplicationContext(), bottomBarImgs[i]), Color.parseColor(colors[i]))
+                    .title(bottomBarStrs[i]).build());
         }
-    }
 
-    @Override
-    public void setVisibilityBottomTabBar(boolean status) {
-        if (status) {
-            bottomLayout.setVisibility(View.VISIBLE);
-        } else {
-            bottomLayout.setVisibility(View.GONE);
-        }
+        navigationTabBar.setModels(models);
+        navigationTabBar.setViewPager(viewPager, 0);
+        navigationTabBar.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+            @Override
+            public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {}
+
+            @Override
+            public void onPageSelected(final int position) {
+                navigationTabBar.getModels().get(position).hideBadge();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(final int state) {}
+        });
+
+        navigationTabBar.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < navigationTabBar.getModels().size(); i++) {
+                    final NavigationTabBar.Model model = navigationTabBar.getModels().get(i);
+                    navigationTabBar.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            model.showBadge();
+                        }
+                    }, i * 100);
+                }
+            }
+        }, 500);
     }
 
     @Override
@@ -128,10 +108,11 @@ public class FragmentContainerActivity extends CommonFragmentActivity implements
     }
 
     @Override
+    public void setVisibilityBottomTabBar(boolean status) {}
+
+    @Override
     public void OnBottomCallBback(int status) {
-        ImageView[] bottomImages = {bottomMapImg, bottomFavoriteImg, bottomPopulationImg, bottomSettingImg};
-        TextView[] bottomTexts = {bottomMapTv, bottomFavoriteTv, bottomPopulationTv, bottomSettingTv};
-        setActivedBottomTab(bottomImages[status], bottomTexts[status], status);
+        navigationTabBar.setViewPager(viewPager, status);
     }
 
     @Override
@@ -167,19 +148,5 @@ public class FragmentContainerActivity extends CommonFragmentActivity implements
         public int getCount() {
             return MAX_PAGE;
         }
-    }
-
-    private void setActivedBottomTab(ImageView imageView, TextView textView, int status) {
-        bottomMapImg.setBackground(getResources().getDrawable(R.drawable.tab_map_off));
-        bottomFavoriteImg.setBackground(getResources().getDrawable(R.drawable.tab_like_off));
-        bottomPopulationImg.setBackground(getResources().getDrawable(R.drawable.tab_popu_off));
-        bottomSettingImg.setBackground(getResources().getDrawable(R.drawable.tab_sett_off));
-        imageView.setBackground(getResources().getDrawable(bottomBarImgs[status]));
-
-        bottomMapTv.setTextColor(getResources().getColor(R.color.darkdeepgray));
-        bottomFavoriteTv.setTextColor(getResources().getColor(R.color.darkdeepgray));
-        bottomPopulationTv.setTextColor(getResources().getColor(R.color.darkdeepgray));
-        bottomSettingTv.setTextColor(getResources().getColor(R.color.darkdeepgray));
-        textView.setTextColor(getResources().getColor(R.color.navy));
     }
 }

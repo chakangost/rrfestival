@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -22,16 +21,12 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-
 import kr.rrcoporation.rrfestival.festival.R;
+import kr.rrcoporation.rrfestival.festival.activity.FragmentContainerActivity;
 import kr.rrcoporation.rrfestival.festival.provider.AuthProvider;
+import kr.rrcoporation.rrfestival.festival.util.Util;
 
 import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
-
-/**
- * Created by fimtrus on 2017. 3. 23..
- * SingleTone
- */
 
 public final class AuthHelper implements FirebaseAuth.AuthStateListener,
                                             GoogleApiClient.OnConnectionFailedListener {
@@ -82,9 +77,7 @@ public final class AuthHelper implements FirebaseAuth.AuthStateListener,
         mFirebaseAuth.addAuthStateListener(this);
     }
 
-
     public void signIn() {
-
         if ( !isInitialized ) {
 
             initialize();
@@ -107,6 +100,10 @@ public final class AuthHelper implements FirebaseAuth.AuthStateListener,
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
+                        Intent intent = new Intent(mContext, FragmentContainerActivity.class);
+                        mContext.startActivity(intent);
+                        ((Activity)mContext).finish();
+                        Util.setSharedPreference(mContext, "autoLogin", true);
                     }
                 });
     }
