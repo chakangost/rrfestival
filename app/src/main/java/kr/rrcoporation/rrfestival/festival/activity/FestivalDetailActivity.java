@@ -20,6 +20,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import kr.rrcoporation.rrfestival.festival.R;
@@ -55,7 +56,6 @@ public class FestivalDetailActivity extends CommonFragmentActivity implements Vi
         setContentView(R.layout.activity_festival_detail);
 
         initialize();
-
     }
 
     private void initialize() {
@@ -71,17 +71,14 @@ public class FestivalDetailActivity extends CommonFragmentActivity implements Vi
         int typeId = bundle.getInt(ExtraConstants.EXTRA_CONTENT_TYPE_ID);
         int contentId = bundle.getInt(ExtraConstants.EXTRA_CONTENT_ID);
 
-
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         ApiAction.getInstance().getFestivalDetailInformation(typeId, contentId).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<DetailInformation>() {
             @Override
-            public void onCompleted() {
-
-            }
+            public void onCompleted() {}
 
             @Override
             public void onError(Throwable e) {
-
+                e.printStackTrace();
             }
 
             @Override

@@ -129,7 +129,7 @@ public class ApiAction {
         String query = "select * from festival;";
         Cursor cursor = apiDB.rawQuery(query, null);
         while (cursor.moveToNext()) {
-            result.add(new BodyItem(Integer.valueOf(cursor.getString(cursor.getColumnIndex("contentid"))), cursor.getString(cursor.getColumnIndex("title")), Double.valueOf(cursor.getString(cursor.getColumnIndex("lat"))), Double.valueOf(cursor.getString(cursor.getColumnIndex("lng"))), cursor.getString(cursor.getColumnIndex("addr1")), cursor.getString(cursor.getColumnIndex("firstimage"))));
+            result.add(new BodyItem(Integer.valueOf(cursor.getString(cursor.getColumnIndex("contentid"))), Integer.valueOf(cursor.getString(cursor.getColumnIndex("contenttypeid"))), cursor.getString(cursor.getColumnIndex("title")), Double.valueOf(cursor.getString(cursor.getColumnIndex("lat"))), Double.valueOf(cursor.getString(cursor.getColumnIndex("lng"))), cursor.getString(cursor.getColumnIndex("addr1")), cursor.getString(cursor.getColumnIndex("firstimage"))));
         }
         cursor.close();
 
