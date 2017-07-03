@@ -15,6 +15,8 @@ import com.google.gson.Gson;
 import com.wenchao.cardstack.CardStack;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import kr.rrcoporation.rrfestival.festival.R;
@@ -115,6 +117,13 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
             mCardStack.setListener(this);
             mCardStack.setListener(this);
             mCardStack.setStackMargin(20);
+
+            Collections.sort(festivals, new Comparator<BodyItem>() {
+                @Override
+                public int compare(BodyItem o1, BodyItem o2) {
+                    return o1.getCreatedtime().compareTo(o2.getCreatedtime());
+                }
+            });
 
             for (BodyItem bodyItem : festivals) {
                 if (bodyItem.getFirstimage() != null) {
