@@ -26,4 +26,5 @@ public class ExtraConstants {
     public static final String EXTRA_CONTENT_ID = "content_id";
     public static final String HAS_EXISTING_INSTANCE = "has_existing_instance";
 
+    public static final String EXTRA_ITEM = "item";
 }

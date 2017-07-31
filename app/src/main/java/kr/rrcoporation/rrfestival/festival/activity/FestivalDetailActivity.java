@@ -14,17 +14,32 @@
 
 package kr.rrcoporation.rrfestival.festival.activity;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
-import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.kakao.kakaolink.v2.KakaoLinkResponse;
+import com.kakao.kakaolink.v2.KakaoLinkService;
+import com.kakao.message.template.ContentObject;
+import com.kakao.message.template.LinkObject;
+import com.kakao.message.template.LocationTemplate;
+import com.kakao.network.ErrorResult;
+import com.kakao.network.callback.ResponseCallback;
+import com.kakao.util.helper.log.Logger;
+
 import kr.rrcoporation.rrfestival.festival.R;
 import kr.rrcoporation.rrfestival.festival.adapter.DetailImageAdapter;
+import kr.rrcoporation.rrfestival.festival.model.BodyItem;
 import kr.rrcoporation.rrfestival.festival.model.DetailInformation;
 import kr.rrcoporation.rrfestival.festival.model.DetailSummary;
 import kr.rrcoporation.rrfestival.festival.model.ExtraConstants;
@@ -39,16 +54,18 @@ public class FestivalDetailActivity extends CommonFragmentActivity implements Vi
     private Toolbar                 toolbar;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private DetailInformation       detailInformation;
+    private BodyItem                bodyItem;
     private ViewPager               imageViewPager;
     private DetailImageAdapter      imageAdapter;
 
-    private TextView eventDate;
-    private TextView address;
-    private TextView program;
-    private TextView subEvent;
-    private TextView payType;
-    private TextView summaryIntro;
-    private TextView telephone;
+    private TextView  eventDate;
+    private TextView  address;
+    private TextView  program;
+    private TextView  subEvent;
+    private TextView  payType;
+    private TextView  summaryIntro;
+    private TextView  telephone;
+    private ImageView shareButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,11 +87,13 @@ public class FestivalDetailActivity extends CommonFragmentActivity implements Vi
         Bundle bundle = getIntent().getExtras();
         int typeId = bundle.getInt(ExtraConstants.EXTRA_CONTENT_TYPE_ID);
         int contentId = bundle.getInt(ExtraConstants.EXTRA_CONTENT_ID);
+        bodyItem = bundle.getParcelable(ExtraConstants.EXTRA_ITEM);
+        collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.ExpandedAppBar);
 
-        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         ApiAction.getInstance().getFestivalDetailInformation(typeId, contentId).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<DetailInformation>() {
             @Override
-            public void onCompleted() {}
+            public void onCompleted() {
+            }
 
             @Override
             public void onError(Throwable e) {
@@ -90,6 +109,8 @@ public class FestivalDetailActivity extends CommonFragmentActivity implements Vi
     }
 
     private void initializeListener() {
+        address.setOnClickListener(this);
+        shareButton.setOnClickListener(this);
     }
 
     private void initializeField() {
@@ -101,6 +122,8 @@ public class FestivalDetailActivity extends CommonFragmentActivity implements Vi
         payType = (TextView) findViewById(R.id.textview_type);
         summaryIntro = (TextView) findViewById(R.id.textview_summary_intro);
         imageViewPager = (ViewPager) findViewById(R.id.viewpager_image);
+        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        shareButton = (ImageView) findViewById(R.id.imageview_share);
     }
 
     private void renderDetailView() {
@@ -115,7 +138,7 @@ public class FestivalDetailActivity extends CommonFragmentActivity implements Vi
 
         String summary = "";
 
-        for(DetailSummary c : detailInformation.getSummaries()) {
+        for (DetailSummary c : detailInformation.getSummaries()) {
             summary += c.getInfoname() + "<br/>";
             summary += c.getInfotext() + "<br/>";
         }
@@ -143,6 +166,42 @@ public class FestivalDetailActivity extends CommonFragmentActivity implements Vi
         switch (id) {
             case R.id.button_facebook:
                 break;
+            case R.id.textview_address:
+                //TODO: check.
+//                MapFragment.newInstance(bodyItem.getMapy(), bodyItem.getMapx(), "FROM_DETAIL");
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("address", address.getText());
+                clipboard.setPrimaryClip(clip);
+                Toast.makeText(this, "주소정보를 클립보드에 복사하였습니다.", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.imageview_share:
+                sendLocationToKakao();
+                break;
         }
+    }
+    private void sendLocationToKakao() {
+
+        LocationTemplate params = LocationTemplate.newBuilder(detailInformation.getAddr1() + " " + detailInformation.getAddr2(),
+                ContentObject.newBuilder(detailInformation.getTitle(),
+                        detailInformation.getImages().get(0).getOriginimgurl(),
+                        LinkObject.newBuilder()
+                                .build())
+                        .setDescrption(detailInformation.getTitle() + " 위치정보입니다.")
+                        .build())
+                .setAddressTitle(detailInformation.getTitle())
+                .build();
+
+        KakaoLinkService.getInstance().sendDefault(this, params, new ResponseCallback<KakaoLinkResponse>() {
+            @Override
+            public void onFailure(ErrorResult errorResult) {
+                Logger.e(errorResult.toString());
+            }
+
+            @Override
+            public void onSuccess(KakaoLinkResponse result) {
+
+            }
+        });
+
     }
 }

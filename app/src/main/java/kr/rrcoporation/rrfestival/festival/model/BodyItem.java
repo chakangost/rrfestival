@@ -1,8 +1,11 @@
 package kr.rrcoporation.rrfestival.festival.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.math.BigDecimal;
 
-public class BodyItem {
+public class BodyItem implements Parcelable {
 
     private String     addr1;
     private String     addr2;
@@ -22,8 +25,27 @@ public class BodyItem {
     private int        readcount;
     private int        sigungucode;
     private String     tel;
-    private String     title;
-    private String     zipcode;
+
+    public Integer getEventenddate() {
+        return eventenddate;
+    }
+
+    public void setEventenddate(Integer eventenddate) {
+        this.eventenddate = eventenddate;
+    }
+
+    public Integer getEventstartdate() {
+        return eventstartdate;
+    }
+
+    public void setEventstartdate(Integer eventstartdate) {
+        this.eventstartdate = eventstartdate;
+    }
+
+    private String  title;
+    private String  zipcode;
+    private Integer eventenddate;
+    private Integer eventstartdate;
 
     public BodyItem(int contentId, int contenttypeid, String title, double lat, double lng, String addr1, String firstimage) {
         this.contentid = contentId;
@@ -194,4 +216,72 @@ public class BodyItem {
     public void setModifiedtime(BigDecimal modifiedtime) {
         this.modifiedtime = modifiedtime;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.addr1);
+        dest.writeString(this.addr2);
+        dest.writeInt(this.areacode);
+        dest.writeString(this.cat1);
+        dest.writeString(this.cat2);
+        dest.writeString(this.cat3);
+        dest.writeInt(this.contentid);
+        dest.writeInt(this.contenttypeid);
+        dest.writeSerializable(this.createdtime);
+        dest.writeString(this.firstimage);
+        dest.writeString(this.firstimage2);
+        dest.writeDouble(this.mapx);
+        dest.writeDouble(this.mapy);
+        dest.writeInt(this.mlevel);
+        dest.writeSerializable(this.modifiedtime);
+        dest.writeInt(this.readcount);
+        dest.writeInt(this.sigungucode);
+        dest.writeString(this.tel);
+        dest.writeString(this.title);
+        dest.writeString(this.zipcode);
+        dest.writeValue(this.eventenddate);
+        dest.writeValue(this.eventstartdate);
+    }
+
+    protected BodyItem(Parcel in) {
+        this.addr1 = in.readString();
+        this.addr2 = in.readString();
+        this.areacode = in.readInt();
+        this.cat1 = in.readString();
+        this.cat2 = in.readString();
+        this.cat3 = in.readString();
+        this.contentid = in.readInt();
+        this.contenttypeid = in.readInt();
+        this.createdtime = (BigDecimal) in.readSerializable();
+        this.firstimage = in.readString();
+        this.firstimage2 = in.readString();
+        this.mapx = in.readDouble();
+        this.mapy = in.readDouble();
+        this.mlevel = in.readInt();
+        this.modifiedtime = (BigDecimal) in.readSerializable();
+        this.readcount = in.readInt();
+        this.sigungucode = in.readInt();
+        this.tel = in.readString();
+        this.title = in.readString();
+        this.zipcode = in.readString();
+        this.eventenddate = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.eventstartdate = (Integer) in.readValue(Integer.class.getClassLoader());
+    }
+
+    public static final Creator<BodyItem> CREATOR = new Creator<BodyItem>() {
+        @Override
+        public BodyItem createFromParcel(Parcel source) {
+            return new BodyItem(source);
+        }
+
+        @Override
+        public BodyItem[] newArray(int size) {
+            return new BodyItem[size];
+        }
+    };
 }

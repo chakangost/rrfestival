@@ -76,6 +76,7 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
     public void topCardTapped() {
         Intent intent = new Intent(getActivity(), FestivalDetailActivity.class);
         BodyItem item = bodyItems.get(festivalsPosition);
+        intent.putExtra(ExtraConstants.EXTRA_ITEM, item);
         intent.putExtra(ExtraConstants.EXTRA_CONTENT_TYPE_ID, item.getContenttypeid());
         intent.putExtra(ExtraConstants.EXTRA_CONTENT_ID, item.getContentid());
         startActivity(intent);

@@ -4,13 +4,18 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import kr.rrcoporation.rrfestival.festival.model.BodyItem;
 import kr.rrcoporation.rrfestival.festival.model.DetailInformation;
 import kr.rrcoporation.rrfestival.festival.model.FestivalResult;
@@ -93,7 +98,9 @@ public class ApiAction {
     }
 
     public void fetchFestivals() {
-        ApiManager.apiService.fetchFestivalData("", "ETC", "AppTesting", "json", "2000", "A02", "A0207")
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
+
+        ApiManager.apiService.fetchFestivalData("", "ETC", "AppTesting", "json", "2000", "A02", "A0207", simpleDateFormat.format(new Date()))
                 .subscribeOn(Schedulers.newThread()).subscribe(new Subscriber<FestivalResult>() {
             @Override
             public void onCompleted() {

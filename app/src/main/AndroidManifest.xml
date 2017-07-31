@@ -44,7 +44,18 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
 
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+
+            <data android:scheme="@string/kakao_scheme"
+                  android:host="@string/kakaolink_host" />
+
         </activity>
+
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="@string/kakao_app_key" />
 
         <service
             android:name=".fcm.MyFirebaseMessagingService">

@@ -18,7 +18,7 @@ public interface ApiService {
             @Field("test") String test2
     );
 
-    @GET("openapi/service/rest/KorService/areaBasedList")
+    @GET("openapi/service/rest/KorService/searchFestival")
     Observable<FestivalResult> fetchFestivalData(
             @Query("areaCode") String areaCode,
             @Query("MobileOS") String MobileOS,
@@ -26,7 +26,8 @@ public interface ApiService {
             @Query("_type") String _type,
             @Query("numOfRows") String numOfRows,
             @Query("cat1") String cat1,
-            @Query("cat2") String cat2
+            @Query("cat2") String cat2,
+            @Query("eventStartDate") String startDate
     );
 
     //기본상세정보
