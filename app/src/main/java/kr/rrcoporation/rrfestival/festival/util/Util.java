@@ -3,7 +3,11 @@ package kr.rrcoporation.rrfestival.festival.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+
+import kr.rrcoporation.rrfestival.festival.application.RRApplication;
 
 public class Util {
 
@@ -133,5 +137,15 @@ public class Util {
         }
 
         return result;
+    }
+
+    public static String getAppVersion() {
+        try {
+            PackageInfo info = RRApplication.getGlobalApplicationContext().getPackageManager().getPackageInfo(RRApplication.getGlobalApplicationContext().getPackageName(), 0);
+            return info.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 }
