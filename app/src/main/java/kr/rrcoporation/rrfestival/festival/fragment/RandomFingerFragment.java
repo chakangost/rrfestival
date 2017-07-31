@@ -98,9 +98,7 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
 
     @Override
     public boolean swipeEnd(int i, float v) {
-        if (mInterstitialAd.isLoaded()) {
-            mInterstitialAd.show();
-        }
+        mInterstitialAd.show();
         return true;
     }
 

@@ -1,17 +1,24 @@
 package kr.rrcoporation.rrfestival.festival.fragment;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.google.gson.Gson;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
+
+import net.daum.mf.map.api.CalloutBalloonAdapter;
 import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapView;
@@ -20,8 +27,10 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import kr.rrcoporation.rrfestival.festival.R;
+import kr.rrcoporation.rrfestival.festival.activity.FestivalDetailActivity;
 import kr.rrcoporation.rrfestival.festival.callback.FragmentContainerBottomCallback;
 import kr.rrcoporation.rrfestival.festival.model.BodyItem;
+import kr.rrcoporation.rrfestival.festival.model.ExtraConstants;
 import kr.rrcoporation.rrfestival.festival.model.FestivalResult;
 import kr.rrcoporation.rrfestival.festival.store.MyFestivalStore;
 import kr.rrcoporation.rrfestival.festival.transaction.ApiAction;
@@ -153,6 +162,7 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
         mapView.setPOIItemEventListener(this);
         mapView.setCurrentLocationEventListener(this);
         mapView.setShowCurrentLocationMarker(true);
+        mapView.setCalloutBalloonAdapter(new CustomCallBalloonAdapter(getActivity()));
         mapView.MAX_ZOOM_LEVEL = -5.0F;
     }
 
@@ -166,6 +176,7 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
             marker = new MapPOIItem();
             marker.setItemName(item.getTitle());
             marker.setTag(item.getContentid());
+            marker.setUserObject(item.getContenttypeid());
             marker.setMapPoint(MapPoint.mapPointWithGeoCoord(item.getMapy(), item.getMapx()));
             marker.setMarkerType(MapPOIItem.MarkerType.BluePin);
             marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin);
@@ -211,6 +222,10 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
 
     @Override
     public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem) {
+        Intent intent = new Intent(getActivity(), FestivalDetailActivity.class);
+        intent.putExtra(ExtraConstants.EXTRA_CONTENT_TYPE_ID, (int)mapPOIItem.getUserObject());
+        intent.putExtra(ExtraConstants.EXTRA_CONTENT_ID, mapPOIItem.getTag());
+        getActivity().startActivity(intent);
     }
 
     @Override
@@ -238,11 +253,31 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
     }
 
     @Override
-    public void onMapViewZoomLevelChanged(MapView mapView, int i) {
-
-    }
+    public void onMapViewZoomLevelChanged(MapView mapView, int i) {}
 
     @Override
     public void onMapViewCenterPointMoved(MapView mapView, MapPoint mapPoint) {
+    }
+
+    static class CustomCallBalloonAdapter implements CalloutBalloonAdapter {
+
+        private final View mCalloutBalloon;
+        private Activity activity;
+
+        public CustomCallBalloonAdapter(Activity activity) {
+            mCalloutBalloon = activity.getLayoutInflater().inflate(R.layout.custom_callout_balloon, null);
+            this.activity = activity;
+        }
+
+        @Override
+        public View getCalloutBalloon(MapPOIItem mapPOIItem) {
+            ((TextView) mCalloutBalloon.findViewById(R.id.tv_festival_name)).setText(mapPOIItem.getItemName());
+            return mCalloutBalloon;
+        }
+
+        @Override
+        public View getPressedCalloutBalloon(MapPOIItem mapPOIItem) {
+            return null;
+        }
     }
 }
