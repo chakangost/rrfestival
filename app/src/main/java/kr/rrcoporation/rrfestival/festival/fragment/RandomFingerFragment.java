@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
@@ -54,7 +55,16 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
         rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_random_finger, null);
         MobileAds.initialize(getActivity(), "ca-app-pub-8748559512063133~2710715408");
         mInterstitialAd = new InterstitialAd(getActivity());
-        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+//        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712"); // 테스트 전면광고
+        mInterstitialAd.setAdUnitId("ca-app-pub-8748559512063133/3229590156"); // 우리꺼
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                super.onAdClosed();
+                mInterstitialAd.loadAd(new AdRequest.Builder().build());
+            }
+        });
         rootLayout.findViewById(R.id.btn_add_favorite).setOnClickListener(this);
         rootLayout.findViewById(R.id.current_position_btn).setOnClickListener(this);
         createDB();
@@ -88,8 +98,9 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
 
     @Override
     public boolean swipeEnd(int i, float v) {
-        mInterstitialAd.loadAd(new AdRequest.Builder().build());
-        mInterstitialAd.show();
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        }
         return true;
     }
 
