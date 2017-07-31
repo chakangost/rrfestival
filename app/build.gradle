@@ -64,6 +64,7 @@ dependencies {
     compile 'com.facebook.stetho:stetho:1.4.1'
     compile 'com.facebook.stetho:stetho-okhttp3:1.4.1'
     compile 'devlight.io:navigationtabbar:1.2.5'
+    compile 'com.google.android.gms:play-services-ads:10.2.1'
 }
 
 apply plugin: 'com.google.gms.google-services'

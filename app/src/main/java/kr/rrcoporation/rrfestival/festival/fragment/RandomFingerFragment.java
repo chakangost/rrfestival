@@ -11,6 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
 import com.google.gson.Gson;
 import com.wenchao.cardstack.CardStack;
 import java.util.ArrayList;
@@ -43,11 +46,15 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
     private int festivalsPosition;
     private List<BodyItem>   bodyItems;
     private Gson gson = new Gson();
+    private InterstitialAd mInterstitialAd;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_random_finger, null);
+        MobileAds.initialize(getActivity(), "ca-app-pub-8748559512063133~2710715408");
+        mInterstitialAd = new InterstitialAd(getActivity());
+        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
         rootLayout.findViewById(R.id.btn_add_favorite).setOnClickListener(this);
         rootLayout.findViewById(R.id.current_position_btn).setOnClickListener(this);
         createDB();
@@ -81,6 +88,8 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
 
     @Override
     public boolean swipeEnd(int i, float v) {
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+        mInterstitialAd.show();
         return true;
     }
 

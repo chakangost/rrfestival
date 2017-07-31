@@ -1,7 +1,6 @@
 package kr.rrcoporation.rrfestival.festival.transaction;
 
 import com.google.gson.JsonObject;
-
 import kr.rrcoporation.rrfestival.festival.model.FestivalResult;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
