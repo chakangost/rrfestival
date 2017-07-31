@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
@@ -21,6 +22,7 @@ import com.gun0912.tedpermission.TedPermission;
 import net.daum.mf.map.api.CalloutBalloonAdapter;
 import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
+import net.daum.mf.map.api.MapReverseGeoCoder;
 import net.daum.mf.map.api.MapView;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,7 +30,9 @@ import java.util.LinkedList;
 import java.util.List;
 import kr.rrcoporation.rrfestival.festival.R;
 import kr.rrcoporation.rrfestival.festival.activity.FestivalDetailActivity;
+import kr.rrcoporation.rrfestival.festival.activity.SearchActivity;
 import kr.rrcoporation.rrfestival.festival.callback.FragmentContainerBottomCallback;
+import kr.rrcoporation.rrfestival.festival.callback.SearchResultCallback;
 import kr.rrcoporation.rrfestival.festival.model.BodyItem;
 import kr.rrcoporation.rrfestival.festival.model.ExtraConstants;
 import kr.rrcoporation.rrfestival.festival.model.FestivalResult;
@@ -39,7 +43,7 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
-public class MapFragment extends CommonFragment implements MapView.MapViewEventListener, MapView.POIItemEventListener, MapView.CurrentLocationEventListener, View.OnClickListener {
+public class MapFragment extends CommonFragment implements MapView.MapViewEventListener, MapView.POIItemEventListener, MapView.CurrentLocationEventListener, View.OnClickListener, SearchResultCallback {
 
     private static FragmentContainerBottomCallback fragmentContainerBottomCallback;
     private static MapView                         mapView;
@@ -107,6 +111,11 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
     }
 
     @Override
+    public void onSearchResult(double lat, double lng, String searchName) {
+        mapView.setMapCenterPointAndZoomLevel(MapPoint.mapPointWithGeoCoord(lat, lng), 3, true);
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         if (subscription != null) {
@@ -135,6 +144,7 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
     private void initView() {
         rootLayout.findViewById(R.id.zoom_in_btn).setOnClickListener(this);
         rootLayout.findViewById(R.id.zoom_out_btn).setOnClickListener(this);
+        rootLayout.findViewById(R.id.ll_search_address).setOnClickListener(this);
     }
 
     private void initPermission() {
@@ -175,8 +185,8 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
         for (BodyItem item : bodyItems) {
             marker = new MapPOIItem();
             marker.setItemName(item.getTitle());
-            marker.setTag(item.getContentid());
-            marker.setUserObject(item.getContenttypeid());
+//            marker.setTag(item.getContentid());
+            marker.setUserObject(item);
             marker.setMapPoint(MapPoint.mapPointWithGeoCoord(item.getMapy(), item.getMapx()));
             marker.setMarkerType(MapPOIItem.MarkerType.BluePin);
             marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin);
@@ -192,6 +202,13 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
                 break;
             case R.id.zoom_out_btn:
                 mapView.setZoomLevel(mapView.getZoomLevel() + 1, true);
+                break;
+            case R.id.ll_search_address:
+                SearchActivity favoriteSearchActivity = new SearchActivity();
+                favoriteSearchActivity.setSearchResultCallback(this);
+                Intent intent = new Intent(getActivity(), SearchActivity.class);
+                intent.putExtra("searchType", "main");
+                startActivity(intent);
                 break;
         }
     }
@@ -223,8 +240,10 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
     @Override
     public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem) {
         Intent intent = new Intent(getActivity(), FestivalDetailActivity.class);
-        intent.putExtra(ExtraConstants.EXTRA_CONTENT_TYPE_ID, (int)mapPOIItem.getUserObject());
-        intent.putExtra(ExtraConstants.EXTRA_CONTENT_ID, mapPOIItem.getTag());
+        BodyItem item = (BodyItem)mapPOIItem.getUserObject();
+        intent.putExtra(ExtraConstants.EXTRA_CONTENT_TYPE_ID, item.getContenttypeid());
+        intent.putExtra(ExtraConstants.EXTRA_CONTENT_ID, item.getContentid());
+        intent.putExtra(ExtraConstants.EXTRA_ITEM, item);
         getActivity().startActivity(intent);
     }
 

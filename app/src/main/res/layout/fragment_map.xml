@@ -15,6 +15,76 @@
             android:layout_height="match_parent" />
 
         <LinearLayout
+            android:id="@+id/ll_search_address"
+            android:layout_width="match_parent"
+            android:layout_height="51dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            android:layout_marginTop="10dp"
+            android:background="@mipmap/bg_search"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/ivMainNavi"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="-4dp"
+                android:background="@mipmap/icon_find2"/>
+
+            <TextView
+                android:id="@+id/main_address_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
+                android:layout_marginRight="6dp"
+                android:layout_marginTop="-4dp"
+                android:layout_weight="8"
+                android:singleLine="true"
+                android:text="장소, 주소검색"
+                android:textColor="@color/lightgray"
+                android:textSize="18dp"/>
+
+            <LinearLayout
+                android:id="@+id/search_reset_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:visibility="invisible">
+
+                <Button
+                    android:id="@+id/delete_btn"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginTop="-4dp"
+                    android:background="@drawable/delete"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_search_place"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="-4dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingRight="17dp">
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/popup_modify_favorite_background"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="14dp"></View>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
