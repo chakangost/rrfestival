@@ -153,7 +153,7 @@ public class ApiAction {
                     combinedJsonObject.add(c.getKey(), c.getValue());
                 }
                 combinedJsonObject.add("summaries", jsonObject3.getAsJsonObject("response").getAsJsonObject("body").getAsJsonObject("items").getAsJsonArray("item"));
-                if("0".equals(jsonObject4.getAsJsonObject("response").getAsJsonObject("body").get("totalCount").toString())) {
+                if(!"0".equals(jsonObject4.getAsJsonObject("response").getAsJsonObject("body").get("totalCount").toString())) {
 
                     combinedJsonObject.add("images", jsonObject4.getAsJsonObject("response").getAsJsonObject("body").getAsJsonObject("items").getAsJsonArray("item"));
                 }
