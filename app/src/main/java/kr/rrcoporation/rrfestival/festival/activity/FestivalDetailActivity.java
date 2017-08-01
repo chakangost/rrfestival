@@ -18,8 +18,11 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -57,15 +60,16 @@ public class FestivalDetailActivity extends CommonFragmentActivity implements Vi
     private BodyItem                bodyItem;
     private ViewPager               imageViewPager;
     private DetailImageAdapter      imageAdapter;
-
-    private TextView  eventDate;
-    private TextView  address;
-    private TextView  program;
-    private TextView  subEvent;
-    private TextView  payType;
-    private TextView  summaryIntro;
-    private TextView  telephone;
-    private ImageView shareButton;
+    private FloatingActionButton    floatingActionButton;
+    private SQLiteDatabase          db;
+    private TextView                eventDate;
+    private TextView                address;
+    private TextView                program;
+    private TextView                subEvent;
+    private TextView                payType;
+    private TextView                summaryIntro;
+    private TextView                telephone;
+    private ImageView               shareButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +115,7 @@ public class FestivalDetailActivity extends CommonFragmentActivity implements Vi
     private void initializeListener() {
         address.setOnClickListener(this);
         shareButton.setOnClickListener(this);
+        floatingActionButton.setOnClickListener(this);
     }
 
     private void initializeField() {
@@ -120,6 +125,7 @@ public class FestivalDetailActivity extends CommonFragmentActivity implements Vi
         program = (TextView) findViewById(R.id.textview_program);
         subEvent = (TextView) findViewById(R.id.textview_subevent);
         payType = (TextView) findViewById(R.id.textview_type);
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         summaryIntro = (TextView) findViewById(R.id.textview_summary_intro);
         imageViewPager = (ViewPager) findViewById(R.id.viewpager_image);
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
@@ -177,8 +183,51 @@ public class FestivalDetailActivity extends CommonFragmentActivity implements Vi
             case R.id.imageview_share:
                 sendLocationToKakao();
                 break;
+            case R.id.fab:
+                if (db == null) {
+                    db = this.openOrCreateDatabase("FESTIVALS.db", Context.MODE_PRIVATE, null);
+                }
+                saveBookmark();
+                break;
         }
     }
+
+    private void saveBookmark() {
+        String existDataQuery = "select * from festival where contentid = '" + detailInformation.getContentId() + "';";
+        Cursor cursor = db.rawQuery(existDataQuery, null);
+
+        int columnCnt = cursor.getCount();
+        cursor.close();
+        if (columnCnt != 0) {
+            Toast.makeText(this, "이미 추가 되어있습니다.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String tableName = "festival";
+        String colums = "contentid, title, lat, lng, contenttypeid, addr1, firstimage";
+        String str1 = "INSERT INTO " + tableName + " (" + colums + ") values(";
+        String str2 = ");";
+
+        db.beginTransaction();
+
+        StringBuilder sb = new StringBuilder(str1);
+        sb.append("'" + detailInformation.getContentId() + "',");
+        sb.append("'" + detailInformation.getTitle() + "',");
+        sb.append("'" + detailInformation.getMapy() + "',");
+        sb.append("'" + detailInformation.getMapx() + "',");
+        sb.append("'" + detailInformation.getContentTypeId() + "',");
+        sb.append("'" + detailInformation.getAddr1() + "',");
+        sb.append("'" + detailInformation.getFirstimage() + "'");
+        sb.append(str2);
+
+        db.execSQL(sb.toString());
+        db.setTransactionSuccessful();
+        db.endTransaction();
+
+        ApiAction.getInstance().fetchBookmarks();
+        Toast.makeText(this, detailInformation.getTitle() + " : 추가됨", Toast.LENGTH_SHORT).show();
+    }
+
     private void sendLocationToKakao() {
 
         LocationTemplate params = LocationTemplate.newBuilder(detailInformation.getAddr1() + " " + detailInformation.getAddr2(),
