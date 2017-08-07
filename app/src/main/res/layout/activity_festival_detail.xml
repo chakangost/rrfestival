@@ -3,6 +3,7 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -35,6 +36,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/transparent"
+                android:title=""
                 app:layout_collapseMode="pin">
 
                 <LinearLayout
@@ -87,7 +89,7 @@
                     android:id="@+id/textview_event_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="test1"/>
+                    tool:text="test1"/>
             </LinearLayout>
 
             <LinearLayout
@@ -105,7 +107,7 @@
                     android:id="@+id/textview_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="test2"/>
+                    tool:text="test2"/>
             </LinearLayout>
 
             <LinearLayout
@@ -123,7 +125,7 @@
                     android:id="@+id/textview_tel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="test2"/>
+                    tool:text="test2"/>
             </LinearLayout>
 
             <LinearLayout
@@ -141,7 +143,7 @@
                     android:id="@+id/textview_program"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="test2"/>
+                    tool:text="test2"/>
             </LinearLayout>
 
             <LinearLayout
@@ -159,7 +161,7 @@
                     android:id="@+id/textview_subevent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="test2"/>
+                    tool:text="test2"/>
             </LinearLayout>
 
             <LinearLayout
@@ -177,7 +179,7 @@
                     android:id="@+id/textview_type"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="test2"/>
+                    tool:text="test2"/>
             </LinearLayout>
 
             <LinearLayout
@@ -190,8 +192,7 @@
                     android:id="@+id/textview_summary_intro"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
-                    android:text="test2"/>
+                    tool:text="test5"/>
             </LinearLayout>
         </LinearLayout>
 

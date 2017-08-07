@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -159,7 +160,15 @@ public class ApiAction {
                 for(Map.Entry<String, JsonElement> c : jsonObject2.getAsJsonObject("response").getAsJsonObject("body").getAsJsonObject("items").getAsJsonObject("item").entrySet()) {
                     combinedJsonObject.add(c.getKey(), c.getValue());
                 }
-                combinedJsonObject.add("summaries", jsonObject3.getAsJsonObject("response").getAsJsonObject("body").getAsJsonObject("items").getAsJsonArray("item"));
+                if(jsonObject3.getAsJsonObject("response").getAsJsonObject("body").getAsJsonObject("items").get("item").isJsonArray()) {
+
+                    combinedJsonObject.add("summaries", jsonObject3.getAsJsonObject("response").getAsJsonObject("body").getAsJsonObject("items").getAsJsonArray("item"));
+                } else {
+                    JsonObject item = jsonObject3.getAsJsonObject("response").getAsJsonObject("body").getAsJsonObject("items").getAsJsonObject("item");
+                    JsonArray array = new JsonArray();
+                    array.add(item);
+                    combinedJsonObject.add("summaries", array);
+                }
                 if(!"0".equals(jsonObject4.getAsJsonObject("response").getAsJsonObject("body").get("totalCount").toString())) {
 
                     combinedJsonObject.add("images", jsonObject4.getAsJsonObject("response").getAsJsonObject("body").getAsJsonObject("items").getAsJsonArray("item"));

@@ -93,7 +93,7 @@ public class FestivalDetailActivity extends CommonFragmentActivity implements Vi
         int contentId = bundle.getInt(ExtraConstants.EXTRA_CONTENT_ID);
         bodyItem = bundle.getParcelable(ExtraConstants.EXTRA_ITEM);
         collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.ExpandedAppBar);
-
+        collapsingToolbarLayout.setTitle(" ");
         ApiAction.getInstance().getFestivalDetailInformation(typeId, contentId).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<DetailInformation>() {
             @Override
             public void onCompleted() {
@@ -136,11 +136,16 @@ public class FestivalDetailActivity extends CommonFragmentActivity implements Vi
 
         collapsingToolbarLayout.setTitle(detailInformation.getTitle());
         eventDate.setText(detailInformation.getEventDate());
-        address.setText(detailInformation.getAddr1() + " " + detailInformation.getAddr2());
+
+        String addressText = detailInformation.getAddr1();
+        if(detailInformation.getAddr2() != null) {
+            addressText += " " + detailInformation.getAddr2();
+        }
+        address.setText(addressText);
         telephone.setText(detailInformation.getTel());
-        program.setText(detailInformation.getProgram());
-        subEvent.setText(detailInformation.getSubEvent());
-        payType.setText(detailInformation.getType());
+        program.setText(Html.fromHtml(detailInformation.getProgram()));
+        subEvent.setText(Html.fromHtml(detailInformation.getSubEvent()));
+        payType.setText(Html.fromHtml(detailInformation.getType()));
 
         String summary = "";
 
