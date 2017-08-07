@@ -173,7 +173,8 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
         mapView.setCurrentLocationEventListener(this);
         mapView.setShowCurrentLocationMarker(true);
         mapView.setCalloutBalloonAdapter(new CustomCallBalloonAdapter(getActivity()));
-        mapView.MAX_ZOOM_LEVEL = -5.0F;
+        mapView.MAX_ZOOM_LEVEL = 5.0F;
+        mapView.MIN_ZOOM_LEVEL = 1.0F;
     }
 
     private void initViewData(List<BodyItem> items, MapView mapView) {

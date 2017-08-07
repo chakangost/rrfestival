@@ -44,10 +44,11 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
     private Subscription     subscription;
     private SQLiteDatabase   db;
     private String TABLE = "festival";
-    private int festivalsPosition;
-    private List<BodyItem>   bodyItems;
+    private int            festivalsPosition;
+    private List<BodyItem> bodyItems;
     private Gson gson = new Gson();
     private InterstitialAd mInterstitialAd;
+    private int avdShowingCnt = 0;
 
     @Nullable
     @Override
@@ -65,6 +66,7 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
                 mInterstitialAd.loadAd(new AdRequest.Builder().build());
             }
         });
+
         rootLayout.findViewById(R.id.btn_add_favorite).setOnClickListener(this);
         rootLayout.findViewById(R.id.current_position_btn).setOnClickListener(this);
         createDB();
@@ -99,7 +101,11 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
 
     @Override
     public boolean swipeEnd(int i, float v) {
-        mInterstitialAd.show();
+        avdShowingCnt++;
+        if (avdShowingCnt > 5) {
+            mInterstitialAd.show();
+            avdShowingCnt = 0;
+        }
         return true;
     }
 
