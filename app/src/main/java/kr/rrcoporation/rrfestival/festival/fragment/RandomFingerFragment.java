@@ -55,9 +55,12 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_random_finger, null);
+//        MobileAds.initialize(getActivity(), "ca-app-pub-8748559512063133~2710715408");
+        MobileAds.initialize(getActivity(), "ca-app-pub-8076266735501767~7399323896"); // 구글 개발자 계정 애드몹 연동
         mInterstitialAd = new InterstitialAd(getActivity());
 //        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712"); // 테스트 전면광고
-        mInterstitialAd.setAdUnitId("ca-app-pub-8748559512063133/3229590156"); // 우리꺼
+//        mInterstitialAd.setAdUnitId("ca-app-pub-8748559512063133/3229590156"); // 우리꺼
+        mInterstitialAd.setAdUnitId("ca-app-pub-8076266735501767/3076935501"); // 구글 개발자 계정 애드몹 연동
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
         mInterstitialAd.setAdListener(new AdListener() {
             @Override

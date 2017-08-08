@@ -24,7 +24,7 @@ public class RRApplication extends MultiDexApplication {
                     .build();
             StrictMode.setVmPolicy(policy);
         }
-        MobileAds.initialize(this, "ca-app-pub-8748559512063133~2710715408");
+
         instance = this;
         ApiManager.init();
         ApiAction.init(this);

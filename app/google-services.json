@@ -1,35 +1,27 @@
 {
   "project_info": {
-    "project_number": "927818406202",
-    "firebase_url": "https://festival-162112.firebaseio.com",
-    "project_id": "festival-162112",
-    "storage_bucket": "festival-162112.appspot.com"
+    "project_number": "935359617101",
+    "firebase_url": "https://festival-4f3af.firebaseio.com",
+    "project_id": "festival-4f3af",
+    "storage_bucket": "festival-4f3af.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:927818406202:android:c7c7c96d6b12149e",
+        "mobilesdk_app_id": "1:935359617101:android:c7c7c96d6b12149e",
         "android_client_info": {
           "package_name": "kr.rrcoporation.rrfestival.festival"
         }
       },
       "oauth_client": [
         {
-          "client_id": "927818406202-6p9sbu2hcqrbok3vd8s48lfjfhik53is.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "kr.rrcoporation.rrfestival.festival",
-            "certificate_hash": "f4397d6709a5c8bd13868e2202e7545002e0661e"
-          }
-        },
-        {
-          "client_id": "927818406202-e0730mrdp2jl8do79tsdcmanevuld4qk.apps.googleusercontent.com",
+          "client_id": "935359617101-3324i6r0mmqdf423bghgdd095v57b5ei.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAhkVcJ0PDeKCNW_ubzuyiiTBAiNnRJV7k"
+          "current_key": "AIzaSyCqBcedhmoW-KaOZt8GrxHCf_5Onu0SOMY"
         }
       ],
       "services": {
@@ -37,13 +29,8 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "927818406202-e0730mrdp2jl8do79tsdcmanevuld4qk.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2

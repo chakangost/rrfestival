@@ -1,5 +1,13 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"
     >
+
+    <string name="app_name">Festival</string>
+    <string name="exit_text">"'뒤로'버튼을 한번 더 누르시면 종료됩니다."</string>
+    <string name="network_connect_retry">네트워크에 연결할 수 없습니다. 네트워크 상태를 확인 후 다시 시도해 주세요.</string>
+    <string name="network_connect_finish">네트워크에 연결할 수 없습니다. 네트워크 상태를 확인 후 어플리케이션을 재실행 해주세요..</string>
+    <string name="network_connect_fail">네트워크 연결 실패</string>
+    <string name="daum_api_key">f89942d15fc136c89b950e93bfdac258</string>
+
     <!-- Common -->
     <string name="default_toolbar_title">@string/app_name</string>
     <string name="progress_dialog_loading">Loading…</string>
