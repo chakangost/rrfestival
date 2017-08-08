@@ -2,13 +2,10 @@ package kr.rrcoporation.rrfestival.festival.fragment;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +15,9 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
-
 import net.daum.mf.map.api.CalloutBalloonAdapter;
 import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
-import net.daum.mf.map.api.MapReverseGeoCoder;
 import net.daum.mf.map.api.MapView;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -160,7 +155,8 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
             }
         };
 
-        new TedPermission(getActivity()).setPermissionListener(permissionlistener).setRationaleMessage("지도 서비스를 사용하기 위해서는 위치 접근 권한이 필요해요").setDeniedMessage("왜 거부하셨어요...\n하지만 [설정] > [권한] 에서 권한을 허용할 수 있어요.").setPermissions(Manifest.permission.ACCESS_FINE_LOCATION).check();
+        new TedPermission(getActivity()).setPermissionListener(permissionlistener).setRationaleMessage("지도 서비스를 사용하기 위해서는 위치 접근 권한이 필요해요")
+                .setDeniedMessage("왜 거부하셨어요...\n하지만 [설정] > [권한] 에서 권한을 허용할 수 있어요.").setPermissions(Manifest.permission.ACCESS_FINE_LOCATION).check();
     }
 
     private void initMapSetting() {

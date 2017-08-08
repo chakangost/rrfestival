@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.StrictMode;
 import android.support.multidex.MultiDexApplication;
 import com.facebook.stetho.Stetho;
+import com.google.android.gms.ads.MobileAds;
 import kr.rrcoporation.rrfestival.festival.BuildConfig;
 import kr.rrcoporation.rrfestival.festival.transaction.ApiAction;
 import kr.rrcoporation.rrfestival.festival.transaction.ApiManager;
@@ -23,6 +24,7 @@ public class RRApplication extends MultiDexApplication {
                     .build();
             StrictMode.setVmPolicy(policy);
         }
+        MobileAds.initialize(this, "ca-app-pub-8748559512063133~2710715408");
         instance = this;
         ApiManager.init();
         ApiAction.init(this);

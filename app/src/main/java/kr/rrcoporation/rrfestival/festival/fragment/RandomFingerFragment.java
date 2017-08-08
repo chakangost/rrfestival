@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
@@ -54,7 +55,6 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_random_finger, null);
-        MobileAds.initialize(getActivity(), "ca-app-pub-8748559512063133~2710715408");
         mInterstitialAd = new InterstitialAd(getActivity());
 //        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712"); // 테스트 전면광고
         mInterstitialAd.setAdUnitId("ca-app-pub-8748559512063133/3229590156"); // 우리꺼
