@@ -8,10 +8,8 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+
 import kr.rrcoporation.rrfestival.festival.R;
-import kr.rrcoporation.rrfestival.festival.util.Util;
 
 public class SplashActivity extends CommonFragmentActivity {
 
@@ -30,8 +28,8 @@ public class SplashActivity extends CommonFragmentActivity {
 
         setContentView(R.layout.activity_splash);
 
-        Animation anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.translate_anim);
-        findViewById(R.id.splash_image).startAnimation(anim);
+//        Animation anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.translate_anim);
+//        findViewById(R.id.splash_image).startAnimation(anim);
 
         thisActivity = this;
         new Handler(getMainLooper()).postDelayed(new Runnable() {
@@ -45,6 +43,6 @@ public class SplashActivity extends CommonFragmentActivity {
 //                    finish();
 //                }
             }
-        }, 3000);
+        }, 1500);
     }
 }
