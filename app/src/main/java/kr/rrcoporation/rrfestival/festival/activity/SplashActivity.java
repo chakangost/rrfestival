@@ -37,13 +37,13 @@ public class SplashActivity extends CommonFragmentActivity {
         new Handler(getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (Util.getBooleanPreference(thisActivity, "autoLogin")) {
+//                if (Util.getBooleanPreference(thisActivity, "autoLogin")) {
                     startActivity(new Intent(SplashActivity.this, FragmentContainerActivity.class));
                     finish();
-                } else {
-                    startActivity(new Intent(SplashActivity.this, AuthActivity.class));
-                    finish();
-                }
+//                } else {
+//                    startActivity(new Intent(SplashActivity.this, AuthActivity.class));
+//                    finish();
+//                }
             }
         }, 3000);
     }
