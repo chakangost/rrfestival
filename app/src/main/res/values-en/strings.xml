@@ -1,5 +1,4 @@
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"
-    >
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" >
 
     <string name="app_name">Festival</string>
     <string name="exit_text">"'뒤로'버튼을 한번 더 누르시면 종료됩니다."</string>
@@ -24,6 +23,7 @@
     <string name="sign_in_with_facebook">Sign in with Facebook</string>
     <string name="sign_in_with_twitter">Sign in with Twitter</string>
     <string name="sign_in_with_email">Sign in with email</string>
+    <string name="version_name">Version : %s</string>
 
     <!-- Email common-->
     <string name="next_default">Next</string>

@@ -52,8 +52,8 @@
             <category android:name="android.intent.category.DEFAULT" />
             <category android:name="android.intent.category.BROWSABLE" />
 
-            <data android:scheme="@string/kakao_scheme"
-                  android:host="@string/kakaolink_host" />
+            <data android:scheme="kakao5fb2bcbb51d7846d1a60e5f848e75140"
+                  android:host="kakaolink" />
 
         </activity>
 
@@ -67,7 +67,7 @@
 g
         <meta-data
             android:name="com.kakao.sdk.AppKey"
-            android:value="@string/kakao_app_key" />
+            android:value="5fb2bcbb51d7846d1a60e5f848e75140" />
 
         <meta-data
             android:name="com.google.android.gms.version"
