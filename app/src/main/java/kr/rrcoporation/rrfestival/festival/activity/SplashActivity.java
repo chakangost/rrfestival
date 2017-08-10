@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 import kr.rrcoporation.rrfestival.festival.R;
+import kr.rrcoporation.rrfestival.festival.util.Util;
 
 public class SplashActivity extends CommonFragmentActivity {
 
@@ -43,6 +44,6 @@ public class SplashActivity extends CommonFragmentActivity {
 //                    finish();
 //                }
             }
-        }, 1500);
+        }, 2000);
     }
 }

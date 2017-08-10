@@ -12,6 +12,6 @@
         android:paddingBottom="50dp"
         android:text="Festival"
         android:textColor="#FFFFFF"
-        android:textSize="72sp"
+        android:textSize="64sp"
         android:textStyle="bold"/>
 </RelativeLayout>

@@ -21,7 +21,6 @@
         <activity
             android:name=".activity.FragmentContainerActivity"
             android:screenOrientation="portrait">
-
         </activity>
         <activity
             android:name=".activity.AuthActivity"
