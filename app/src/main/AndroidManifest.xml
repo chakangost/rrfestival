@@ -20,7 +20,9 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activity.FragmentContainerActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Design.NoActionBar">
+
         </activity>
         <activity
             android:name=".activity.AuthActivity"
@@ -28,12 +30,13 @@
         </activity>
         <activity
             android:name=".activity.SearchActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Design.NoActionBar">
         </activity>
         <activity
             android:name=".activity.SplashActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
+            android:theme="@style/Theme.Design.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -45,7 +48,7 @@
             android:name=".activity.FestivalDetailActivity"
             android:label="Detail"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
+            android:theme="@style/Theme.Design.NoActionBar">
 
             <action android:name="android.intent.action.VIEW" />
             <category android:name="android.intent.category.DEFAULT" />
