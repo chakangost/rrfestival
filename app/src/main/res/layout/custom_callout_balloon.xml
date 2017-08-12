@@ -10,7 +10,16 @@
         android:padding="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
         android:text="축제이름 블라블라~dfdf"/>
+
+    <TextView
+        android:id="@+id/tv_festival_term"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:textColor="@android:color/black"
+        android:text="2017.10.1 ~ 2017.10.11"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,6 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
+            android:textColor="@android:color/black"
             android:background="@drawable/rectangle_4dp_rounded_navy_stroke"
             android:text="상세보기"/>
 
