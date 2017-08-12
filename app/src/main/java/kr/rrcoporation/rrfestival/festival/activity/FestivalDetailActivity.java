@@ -30,7 +30,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.kakao.kakaolink.v2.KakaoLinkResponse;
 import com.kakao.kakaolink.v2.KakaoLinkService;
 import com.kakao.message.template.ContentObject;
@@ -39,7 +41,6 @@ import com.kakao.message.template.LocationTemplate;
 import com.kakao.network.ErrorResult;
 import com.kakao.network.callback.ResponseCallback;
 import com.kakao.util.helper.log.Logger;
-
 import kr.rrcoporation.rrfestival.festival.R;
 import kr.rrcoporation.rrfestival.festival.adapter.DetailImageAdapter;
 import kr.rrcoporation.rrfestival.festival.model.BodyItem;
@@ -70,6 +71,7 @@ public class FestivalDetailActivity extends CommonFragmentActivity implements Vi
     private TextView                summaryIntro;
     private TextView                telephone;
     private ImageView               shareButton;
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +89,10 @@ public class FestivalDetailActivity extends CommonFragmentActivity implements Vi
 
     private void intializeView() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        MobileAds.initialize(getApplicationContext(), "ca-app-pub-5805964986423132~7275523247");
+        mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
         setSupportActionBar(toolbar);
         Bundle bundle = getIntent().getExtras();
         int typeId = bundle.getInt(ExtraConstants.EXTRA_CONTENT_TYPE_ID);
