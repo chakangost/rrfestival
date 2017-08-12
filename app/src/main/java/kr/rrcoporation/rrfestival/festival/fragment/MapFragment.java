@@ -288,6 +288,8 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
         @Override
         public View getCalloutBalloon(MapPOIItem mapPOIItem) {
             ((TextView) mCalloutBalloon.findViewById(R.id.tv_festival_name)).setText(mapPOIItem.getItemName());
+            BodyItem item = (BodyItem)mapPOIItem.getUserObject();
+            ((TextView) mCalloutBalloon.findViewById(R.id.tv_festival_term)).setText(String.valueOf(item.getEventstartdate()) + " ~ " + String.valueOf(item.getEventenddate()));
             return mCalloutBalloon;
         }
 
