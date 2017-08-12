@@ -63,6 +63,7 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
         mInterstitialAd.setAdUnitId("ca-app-pub-8076266735501767/3076935501"); // 구글 개발자 계정 애드몹 연동
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
         mInterstitialAd.setAdListener(new AdListener() {
+
             @Override
             public void onAdClosed() {
                 super.onAdClosed();
