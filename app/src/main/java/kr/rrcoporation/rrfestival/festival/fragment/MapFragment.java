@@ -137,6 +137,7 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
     }
 
     private void initView() {
+        rootLayout.findViewById(R.id.btnMyLocation).setOnClickListener(this);
         rootLayout.findViewById(R.id.zoom_in_btn).setOnClickListener(this);
         rootLayout.findViewById(R.id.zoom_out_btn).setOnClickListener(this);
         rootLayout.findViewById(R.id.ll_search_address).setOnClickListener(this);
@@ -194,6 +195,9 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.btnMyLocation:
+                mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
+                break;
             case R.id.zoom_in_btn:
                 mapView.setZoomLevel(mapView.getZoomLevel() - 1, true);
                 break;

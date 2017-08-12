@@ -89,7 +89,7 @@ public class FestivalDetailActivity extends CommonFragmentActivity implements Vi
 
     private void intializeView() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        MobileAds.initialize(getApplicationContext(), "ca-app-pub-5805964986423132~7275523247");
+        MobileAds.initialize(getApplicationContext(), "ca-app-pub-8076266735501767~7399323896");
         mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
