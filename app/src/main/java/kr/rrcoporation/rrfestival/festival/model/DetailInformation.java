@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 public class DetailInformation {
 
-
     //detail common
     private String addr1;
     private String addr2;
@@ -27,7 +26,7 @@ public class DetailInformation {
     private String tel;
     private String telname;
     private String title;
-    private Integer zipcode;
+    private String zipcode;
     //detailIntro
     @SerializedName("agelimit")
     private String ageLimit;
@@ -219,11 +218,11 @@ public class DetailInformation {
         this.title = title;
     }
 
-    public Integer getZipcode() {
+    public String getZipcode() {
         return zipcode;
     }
 
-    public void setZipcode(Integer zipcode) {
+    public void setZipcode(String zipcode) {
         this.zipcode = zipcode;
     }
 

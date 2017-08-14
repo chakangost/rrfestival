@@ -178,7 +178,14 @@ public class ApiAction {
                 }
                 if(!"0".equals(jsonObject4.getAsJsonObject("response").getAsJsonObject("body").get("totalCount").toString())) {
 
-                    combinedJsonObject.add("images", jsonObject4.getAsJsonObject("response").getAsJsonObject("body").getAsJsonObject("items").getAsJsonArray("item"));
+                    if(jsonObject4.getAsJsonObject("response").getAsJsonObject("body").getAsJsonObject("items").get("item").isJsonArray()) {
+                        combinedJsonObject.add("images", jsonObject4.getAsJsonObject("response").getAsJsonObject("body").getAsJsonObject("items").getAsJsonArray("item"));
+                    } else {
+                        JsonObject item = jsonObject4.getAsJsonObject("response").getAsJsonObject("body").getAsJsonObject("items").getAsJsonObject("item");
+                        JsonArray array = new JsonArray();
+                        array.add(item);
+                        combinedJsonObject.add("images", array);
+                    }
                 }
                 return gson.fromJson(combinedJsonObject, DetailInformation.class);
                 }
