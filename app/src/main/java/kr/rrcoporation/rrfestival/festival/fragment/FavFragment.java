@@ -50,12 +50,10 @@ public class FavFragment extends CommonFragment implements AdapterView.OnItemCli
     private void observeBookmarkStore() {
         subscription = MyBookmarkStore.getInstance().observe().observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<Void>() {
             @Override
-            public void onCompleted() {
-            }
+            public void onCompleted() {}
 
             @Override
-            public void onError(Throwable e) {
-            }
+            public void onError(Throwable e) {}
 
             @Override
             public void onNext(Void aVoid) {

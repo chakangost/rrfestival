@@ -215,7 +215,7 @@ public class FestivalDetailActivity extends CommonFragmentActivity implements Vi
         }
 
         String tableName = "festival";
-        String colums = "contentid, title, lat, lng, contenttypeid, addr1, firstimage";
+        String colums = "contentid, title, lat, lng, contenttypeid, addr1, tel, firstimage";
         String str1 = "INSERT INTO " + tableName + " (" + colums + ") values(";
         String str2 = ");";
 
@@ -228,6 +228,7 @@ public class FestivalDetailActivity extends CommonFragmentActivity implements Vi
         sb.append("'" + detailInformation.getMapx() + "',");
         sb.append("'" + detailInformation.getContentTypeId() + "',");
         sb.append("'" + detailInformation.getAddr1() + "',");
+        sb.append("'" + detailInformation.getTel() + "',");
         sb.append("'" + detailInformation.getFirstimage() + "'");
         sb.append(str2);
 

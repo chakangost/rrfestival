@@ -177,7 +177,7 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
         }
 
         String tableName = "festival";
-        String colums = "contentid, title, lat, lng, contenttypeid, addr1, firstimage";
+        String colums = "contentid, title, lat, lng, contenttypeid, addr1, tel, firstimage";
         String str1 = "INSERT INTO " + tableName + " (" + colums + ") values(";
         String str2 = ");";
 
@@ -190,6 +190,7 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
         sb.append("'" + bodyItems.get(festivalsPosition).getMapx() + "',");
         sb.append("'" + bodyItems.get(festivalsPosition).getContenttypeid() + "',");
         sb.append("'" + bodyItems.get(festivalsPosition).getAddr1() + "',");
+        sb.append("'" + bodyItems.get(festivalsPosition).getTel() + "',");
         sb.append("'" + bodyItems.get(festivalsPosition).getFirstimage() + "'");
         sb.append(str2);
 
@@ -206,7 +207,7 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
 
         String CREATE_FESTIVAL_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE + "("
                 + "contentid" + " TEXT," + "title" + " TEXT,"
-                + "lat" + " DOUBLE," + "lng" + " DOUBLE," + "contenttypeid" + " TEXT," + "addr1" + " TEXT,"+ "firstimage" + " TEXT" +")";
+                + "lat" + " DOUBLE," + "lng" + " DOUBLE," + "contenttypeid" + " TEXT," + "addr1" + " TEXT," + "tel" +" TEXT,"+ "firstimage" + " TEXT" +")";
 
         db.execSQL(CREATE_FESTIVAL_TABLE);
     }

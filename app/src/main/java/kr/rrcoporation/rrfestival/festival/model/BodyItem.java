@@ -47,13 +47,14 @@ public class BodyItem implements Parcelable {
     private Integer eventenddate;
     private Integer eventstartdate;
 
-    public BodyItem(int contentId, int contenttypeid, String title, double lat, double lng, String addr1, String firstimage) {
+    public BodyItem(int contentId, int contenttypeid, String title, double lat, double lng, String addr1, String tel, String firstimage) {
         this.contentid = contentId;
         this.contenttypeid = contenttypeid;
         this.title = title;
         this.mapy = lat;
         this.mapx = lng;
         this.addr1 = addr1;
+        this.tel = tel;
         this.firstimage = firstimage;
     }
 
