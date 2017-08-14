@@ -1,6 +1,7 @@
 package kr.rrcoporation.rrfestival.festival.view;
 
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +48,7 @@ public class CardsDataAdapter extends ArrayAdapter<String> {
 
         title.setText(bodyItem.getTitle());
         address.setText(bodyItem.getAddr1());
-        tel.setText(bodyItem.getTel());
+        tel.setText(Html.fromHtml(bodyItem.getTel()));
 
         return contentView;
     }
