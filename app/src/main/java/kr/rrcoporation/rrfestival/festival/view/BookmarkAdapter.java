@@ -2,6 +2,7 @@ package kr.rrcoporation.rrfestival.festival.view;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -10,6 +11,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import kr.rrcoporation.rrfestival.festival.R;
 import kr.rrcoporation.rrfestival.festival.model.BodyItem;
@@ -41,8 +46,37 @@ public class BookmarkAdapter extends BaseAdapter {
         } else {
             holder = (BookmarkHolder) convertView.getTag();
         }
-
-
+        long now = System.currentTimeMillis();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd HH:mm", java.util.Locale.getDefault());
+        Date date = new Date(now);
+        String strDate = dateFormat.format(date);
+        Date date1 = null;
+        Date date2 = null;
+        try {
+            date1 = dateFormat.parse(strDate);
+            date2 = dateFormat.parse(String.valueOf(list.get(position).getEventenddate()) + "00:00");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if (date2 != null) {
+            if (date1.after(date2)) {
+                holder.llDim.setVisibility(View.VISIBLE);
+                convertView.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        return true;
+                    }
+                });
+            } else {
+                convertView.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        return false;
+                    }
+                });
+                holder.llDim.setVisibility(View.GONE);
+            }
+        }
 
         holder.title.setText(list.get(position).getTitle());
         holder.address.setText(list.get(position).getAddr1());

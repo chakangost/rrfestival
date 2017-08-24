@@ -53,7 +53,6 @@ public class FavFragment extends CommonFragment implements AdapterView.OnItemCli
         listView.setOnItemClickListener(this);
         listView.setOnMenuItemClickListener(this);
         observeBookmarkStore();
-        ApiAction.getInstance().fetchBookmarks();
         return rootLayout;
     }
 
@@ -63,6 +62,12 @@ public class FavFragment extends CommonFragment implements AdapterView.OnItemCli
         if (subscription != null) {
             subscription.unsubscribe();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ApiAction.getInstance().fetchBookmarks();
     }
 
     private void observeBookmarkStore() {
@@ -86,7 +91,7 @@ public class FavFragment extends CommonFragment implements AdapterView.OnItemCli
     public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
         switch (index) {
             case 0:
-                Toast.makeText(getActivity(), "오픈", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "취소", Toast.LENGTH_SHORT).show();
                 break;
             case 1:
                 deleteBookmark(bookmarkList.get(position).getContentid());

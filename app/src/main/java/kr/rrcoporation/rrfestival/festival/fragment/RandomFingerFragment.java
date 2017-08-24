@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
@@ -54,6 +53,7 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        createDB();
         rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_random_finger, null);
 //        MobileAds.initialize(getActivity(), "ca-app-pub-8748559512063133~2710715408");
         MobileAds.initialize(getActivity(), "ca-app-pub-8076266735501767~7399323896"); // 구글 개발자 계정 애드몹 연동
@@ -73,7 +73,6 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
 
         rootLayout.findViewById(R.id.btn_add_favorite).setOnClickListener(this);
         rootLayout.findViewById(R.id.current_position_btn).setOnClickListener(this);
-        createDB();
         settingCards();
         return rootLayout;
     }
@@ -177,7 +176,7 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
         }
 
         String tableName = "festival";
-        String colums = "contentid, title, lat, lng, contenttypeid, addr1, tel, firstimage";
+        String colums = "contentid, title, eventenddate, lat, lng, contenttypeid, addr1, tel, firstimage";
         String str1 = "INSERT INTO " + tableName + " (" + colums + ") values(";
         String str2 = ");";
 
@@ -186,6 +185,7 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
         StringBuilder sb = new StringBuilder(str1);
         sb.append("'" + bodyItems.get(festivalsPosition).getContentid() + "',");
         sb.append("'" + bodyItems.get(festivalsPosition).getTitle() + "',");
+        sb.append("'" + bodyItems.get(festivalsPosition).getEventenddate() + "',");
         sb.append("'" + bodyItems.get(festivalsPosition).getMapy() + "',");
         sb.append("'" + bodyItems.get(festivalsPosition).getMapx() + "',");
         sb.append("'" + bodyItems.get(festivalsPosition).getContenttypeid() + "',");
@@ -206,8 +206,8 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
         db = getActivity().openOrCreateDatabase("FESTIVALS.db", Context.MODE_PRIVATE, null);
 
         String CREATE_FESTIVAL_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE + "("
-                + "contentid" + " TEXT," + "title" + " TEXT,"
-                + "lat" + " DOUBLE," + "lng" + " DOUBLE," + "contenttypeid" + " TEXT," + "addr1" + " TEXT," + "tel" +" TEXT,"+ "firstimage" + " TEXT" +")";
+                + "contentid" + " TEXT," + "title" + " TEXT," + "eventenddate" + " TEXT,"
+                + "lat" + " DOUBLE," + "lng" + " DOUBLE," + "contenttypeid" + " TEXT," + "addr1" + " TEXT," + "tel" +" TEXT," + "firstimage" + " TEXT" +")";
 
         db.execSQL(CREATE_FESTIVAL_TABLE);
     }

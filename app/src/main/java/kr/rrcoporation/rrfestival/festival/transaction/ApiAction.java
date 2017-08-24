@@ -137,6 +137,7 @@ public class ApiAction {
             result.add(new BodyItem(Integer.valueOf(cursor.getString(cursor.getColumnIndex("contentid"))),
                                 Integer.valueOf(cursor.getString(cursor.getColumnIndex("contenttypeid"))),
                                                          cursor.getString(cursor.getColumnIndex("title")),
+                                 Integer.valueOf(cursor.getString(cursor.getColumnIndex("eventenddate"))),
                                            Double.valueOf(cursor.getString(cursor.getColumnIndex("lat"))),
                                            Double.valueOf(cursor.getString(cursor.getColumnIndex("lng"))),
                                                          cursor.getString(cursor.getColumnIndex("addr1")),
