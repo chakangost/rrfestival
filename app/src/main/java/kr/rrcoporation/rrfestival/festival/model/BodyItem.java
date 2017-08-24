@@ -25,6 +25,10 @@ public class BodyItem implements Parcelable {
     private int        readcount;
     private int        sigungucode;
     private String     tel;
+    private String  title;
+    private String  zipcode;
+    private Integer eventenddate;
+    private Integer eventstartdate;
 
     public Integer getEventenddate() {
         return eventenddate;
@@ -41,11 +45,6 @@ public class BodyItem implements Parcelable {
     public void setEventstartdate(Integer eventstartdate) {
         this.eventstartdate = eventstartdate;
     }
-
-    private String  title;
-    private String  zipcode;
-    private Integer eventenddate;
-    private Integer eventstartdate;
 
     public BodyItem(int contentId, int contenttypeid, String title, double lat, double lng, String addr1, String tel, String firstimage) {
         this.contentid = contentId;

@@ -1,12 +1,12 @@
 package kr.rrcoporation.rrfestival.festival.view;
 
 import android.content.Context;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
@@ -36,14 +36,17 @@ public class BookmarkAdapter extends BaseAdapter {
             holder.address = (TextView) convertView.findViewById(R.id.address);
             holder.phoneNumber = (TextView) convertView.findViewById(R.id.phone_number);
             holder.thumnail = (ImageView) convertView.findViewById(R.id.thumnail);
+            holder.llDim = (LinearLayout) convertView.findViewById(R.id.ll_dim);
             convertView.setTag(holder);
         } else {
             holder = (BookmarkHolder) convertView.getTag();
         }
 
+
+
         holder.title.setText(list.get(position).getTitle());
         holder.address.setText(list.get(position).getAddr1());
-        holder.phoneNumber.setText(list.get(position).getTel());
+        holder.phoneNumber.setText(list.get(position).getTel().replaceAll("<br />", ""));
         mGlideRequestManager.load(list.get(position).getFirstimage()).override(300, 300).into(holder.thumnail);
         return convertView;
     }
@@ -68,5 +71,6 @@ public class BookmarkAdapter extends BaseAdapter {
         TextView address;
         TextView phoneNumber;
         ImageView thumnail;
+        LinearLayout llDim;
     }
 }
