@@ -12,17 +12,19 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.gson.Gson;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
+
 import net.daum.mf.map.api.CalloutBalloonAdapter;
 import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapView;
+
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
+
 import kr.rrcoporation.rrfestival.festival.R;
 import kr.rrcoporation.rrfestival.festival.activity.FestivalDetailActivity;
 import kr.rrcoporation.rrfestival.festival.activity.SearchActivity;
@@ -32,11 +34,7 @@ import kr.rrcoporation.rrfestival.festival.model.BodyItem;
 import kr.rrcoporation.rrfestival.festival.model.ExtraConstants;
 import kr.rrcoporation.rrfestival.festival.model.FestivalResult;
 import kr.rrcoporation.rrfestival.festival.store.MyFestivalStore;
-import kr.rrcoporation.rrfestival.festival.transaction.ApiAction;
-import kr.rrcoporation.rrfestival.festival.util.Util;
-import rx.Subscriber;
 import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
 
 public class MapFragment extends CommonFragment implements MapView.MapViewEventListener, MapView.POIItemEventListener, MapView.CurrentLocationEventListener, View.OnClickListener, SearchResultCallback {
 
@@ -84,7 +82,6 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_map, null);
         initView();
-        observeFestivalStore();
         initPermission();
         return rootLayout;
     }
@@ -96,13 +93,7 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
 
     @Override
     public void onMapViewInitialized(MapView mapView) {
-        if (Util.getSharedPreference(getContext(), "FESTIVAL_LIST").equals("")) {
-            ApiAction.getInstance().fetchFestivals();
-        } else {
-            String festivalGsonStr = Util.getSharedPreference(getContext(), "FESTIVAL_LIST");
-            FestivalResult festivalItem = gson.fromJson(festivalGsonStr, FestivalResult.class);
-            initViewData(new LinkedList<>(Arrays.asList(festivalItem.getResponse().getBody().getItems().getItem())), mapView);
-        }
+        renderMap();
     }
 
     @Override
@@ -118,22 +109,10 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
         }
     }
 
-    private void observeFestivalStore() {
-        subscription = MyFestivalStore.getInstance().observe().observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<Void>() {
-            @Override
-            public void onCompleted() {}
-
-            @Override
-            public void onError(Throwable e) {}
-
-            @Override
-            public void onNext(Void aVoid) {
-                List<BodyItem> festivals = MyFestivalStore.getInstance().getFestivals();
-                FestivalResult festivalResult = MyFestivalStore.getInstance().getFestivalResult();
-                Util.setSharedPreference(getContext(), "FESTIVAL_LIST", gson.toJson(festivalResult));
-                initViewData(festivals, mapView);
-            }
-        });
+    private void renderMap() {
+        List<BodyItem> festivals = MyFestivalStore.getInstance().getFestivals();
+        FestivalResult festivalResult = MyFestivalStore.getInstance().getFestivalResult();
+        initViewData(festivals, mapView);
     }
 
     private void initView() {

@@ -18,12 +18,14 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.gson.Gson;
 import com.wenchao.cardstack.CardStack;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+
 import kr.rrcoporation.rrfestival.festival.R;
 import kr.rrcoporation.rrfestival.festival.activity.FestivalDetailActivity;
 import kr.rrcoporation.rrfestival.festival.model.BodyItem;
@@ -33,9 +35,7 @@ import kr.rrcoporation.rrfestival.festival.store.MyFestivalStore;
 import kr.rrcoporation.rrfestival.festival.transaction.ApiAction;
 import kr.rrcoporation.rrfestival.festival.util.Util;
 import kr.rrcoporation.rrfestival.festival.view.CardsDataAdapter;
-import rx.Subscriber;
 import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
 
 public class RandomFingerFragment extends CommonFragment implements View.OnClickListener, CardStack.CardEventListener {
 
@@ -135,7 +135,7 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
 
     private void settingCards() {
         if (Util.getSharedPreference(getContext(), "FESTIVAL_LIST").equals("")) {
-            observeFestivalStore();
+            renderRandomFinger();
         } else {
             String festivalGsonStr = Util.getSharedPreference(getContext(), "FESTIVAL_LIST");
             FestivalResult festivalItem = gson.fromJson(festivalGsonStr, FestivalResult.class);
@@ -212,33 +212,22 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
         db.execSQL(CREATE_FESTIVAL_TABLE);
     }
 
-    private void observeFestivalStore() {
-        subscription = MyFestivalStore.getInstance().observe().observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<Void>() {
-            @Override
-            public void onCompleted() {
-            }
+    private void renderRandomFinger() {
 
-            @Override
-            public void onError(Throwable e) {
+        List<BodyItem> festivals = MyFestivalStore.getInstance().getFestivals();
+        bodyItems = new ArrayList<>();
+        for (BodyItem bodyItem : festivals) {
+            if (bodyItem.getFirstimage() != null) {
+                bodyItems.add(bodyItem);
             }
+        }
+        mCardStack = (CardStack) rootLayout.findViewById(R.id.container);
+        mCardStack.setContentResource(R.layout.festival_detail);
+        mCardStack.setListener(RandomFingerFragment.this);
+        mCardStack.setStackMargin(20);
 
-            @Override
-            public void onNext(Void aVoid) {
-                List<BodyItem> festivals = MyFestivalStore.getInstance().getFestivals();
-                bodyItems = new ArrayList<>();
-                for (BodyItem bodyItem : festivals) {
-                    if (bodyItem.getFirstimage() != null) {
-                        bodyItems.add(bodyItem);
-                    }
-                }
-                mCardStack = (CardStack) rootLayout.findViewById(R.id.container);
-                mCardStack.setContentResource(R.layout.festival_detail);
-                mCardStack.setListener(RandomFingerFragment.this);
-                mCardStack.setStackMargin(20);
+        mCardAdapter = new CardsDataAdapter(getActivity().getApplicationContext(), bodyItems);
+        mCardStack.setAdapter(mCardAdapter);
 
-                mCardAdapter = new CardsDataAdapter(getActivity().getApplicationContext(), bodyItems);
-                mCardStack.setAdapter(mCardAdapter);
-            }
-        });
     }
 }
