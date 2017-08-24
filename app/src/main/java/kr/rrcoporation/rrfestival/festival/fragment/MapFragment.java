@@ -32,7 +32,6 @@ import kr.rrcoporation.rrfestival.festival.callback.FragmentContainerBottomCallb
 import kr.rrcoporation.rrfestival.festival.callback.SearchResultCallback;
 import kr.rrcoporation.rrfestival.festival.model.BodyItem;
 import kr.rrcoporation.rrfestival.festival.model.ExtraConstants;
-import kr.rrcoporation.rrfestival.festival.model.FestivalResult;
 import kr.rrcoporation.rrfestival.festival.store.MyFestivalStore;
 import rx.Subscription;
 
@@ -111,7 +110,6 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
 
     private void renderMap() {
         List<BodyItem> festivals = MyFestivalStore.getInstance().getFestivals();
-        FestivalResult festivalResult = MyFestivalStore.getInstance().getFestivalResult();
         initViewData(festivals, mapView);
     }
 

@@ -26,6 +26,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -148,10 +149,16 @@ public class FestivalDetailActivity extends CommonFragmentActivity implements Vi
             addressText += " " + detailInformation.getAddr2();
         }
         address.setText(addressText);
-        telephone.setText(detailInformation.getTel());
+        telephone.setText(Html.fromHtml(detailInformation.getTel()));
         program.setText(Html.fromHtml(detailInformation.getProgram()));
         subEvent.setText(Html.fromHtml(detailInformation.getSubEvent()));
         payType.setText(Html.fromHtml(detailInformation.getType()));
+
+        program.setClickable(true);
+        program.setMovementMethod(LinkMovementMethod.getInstance());
+
+        subEvent.setClickable(true);
+        subEvent.setMovementMethod(LinkMovementMethod.getInstance());
 
         String summary = "";
 
@@ -160,6 +167,9 @@ public class FestivalDetailActivity extends CommonFragmentActivity implements Vi
             summary += c.getInfotext() + "<br/>";
         }
         summaryIntro.setText(Html.fromHtml(summary));
+        summaryIntro.setClickable(true);
+        summaryIntro.setMovementMethod(LinkMovementMethod.getInstance());
+
         imageAdapter = DetailImageAdapter.newInstance(FestivalDetailActivity.this, detailInformation.getImages());
         imageViewPager.setAdapter(imageAdapter);
         imageViewPager.setCurrentItem(detailInformation.getImages().size() * 1000);
