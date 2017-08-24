@@ -96,6 +96,9 @@ public class FragmentContainerActivity extends CommonFragmentActivity implements
                 backHandler.sendEmptyMessageDelayed(0, 2500);
             } else {
                 super.onBackPressed();
+                finishAffinity();
+                System.runFinalization();
+                System.exit(0);
             }
         }
     }

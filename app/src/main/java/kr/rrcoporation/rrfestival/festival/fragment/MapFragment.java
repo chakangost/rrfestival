@@ -42,7 +42,7 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
     private static List<BodyItem>                  bodyItems;
     private        Subscription subscription;
     private static MapFragment  mapFragment;
-    private Gson gson = new Gson();
+    private ViewGroup mapViewContainer;
 
     public void setPopulationFragmentCallback(FragmentContainerBottomCallback fragmentContainerBottomCallback) {
         MapFragment.fragmentContainerBottomCallback = fragmentContainerBottomCallback;
@@ -108,6 +108,16 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mapView != null) {
+            mapViewContainer.removeAllViews();
+            mapView.clearFocus();
+            mapView = null;
+        }
+    }
+
     private void renderMap() {
         List<BodyItem> festivals = MyFestivalStore.getInstance().getFestivals();
         initViewData(festivals, mapView);
@@ -140,7 +150,7 @@ public class MapFragment extends CommonFragment implements MapView.MapViewEventL
     private void initMapSetting() {
         mapView = new MapView(getActivity());
         mapView.setDaumMapApiKey(getString(R.string.daum_api_key));
-        ViewGroup mapViewContainer = (ViewGroup) rootLayout.findViewById(R.id.map_view);
+        mapViewContainer = (ViewGroup) rootLayout.findViewById(R.id.map_view);
         mapViewContainer.addView(mapView);
         mapView.setMapViewEventListener(this);
         mapView.setPOIItemEventListener(this);
