@@ -133,21 +133,14 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
     }
 
     private void settingCards() {
-        FestivalResult festivalItem = MyFestivalStore.getInstance().getFestivalResult();
-        List<BodyItem> festivals = new LinkedList<>(Arrays.asList(festivalItem.getResponse().getBody().getItems().getItem()));
+        List<BodyItem> festivals = MyFestivalStore.getInstance().getFestivals();
+        Collections.shuffle(festivals);
         bodyItems = new ArrayList<>();
         mCardStack = (CardStack) rootLayout.findViewById(R.id.container);
         mCardStack.setContentResource(R.layout.festival_detail);
         mCardStack.setListener(this);
         mCardStack.setListener(this);
         mCardStack.setStackMargin(20);
-
-        Collections.sort(festivals, new Comparator<BodyItem>() {
-            @Override
-            public int compare(BodyItem o1, BodyItem o2) {
-                return o1.getCreatedtime().compareTo(o2.getCreatedtime());
-            }
-        });
 
         for (BodyItem bodyItem : festivals) {
             if (bodyItem.getFirstimage() != null) {
@@ -205,24 +198,5 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
                 + "lat" + " DOUBLE," + "lng" + " DOUBLE," + "contenttypeid" + " TEXT," + "addr1" + " TEXT," + "tel" +" TEXT," + "firstimage" + " TEXT" +")";
 
         db.execSQL(CREATE_FESTIVAL_TABLE);
-    }
-
-    private void renderRandomFinger() {
-
-        List<BodyItem> festivals = MyFestivalStore.getInstance().getFestivals();
-        bodyItems = new ArrayList<>();
-        for (BodyItem bodyItem : festivals) {
-            if (bodyItem.getFirstimage() != null) {
-                bodyItems.add(bodyItem);
-            }
-        }
-        mCardStack = (CardStack) rootLayout.findViewById(R.id.container);
-        mCardStack.setContentResource(R.layout.festival_detail);
-        mCardStack.setListener(RandomFingerFragment.this);
-        mCardStack.setStackMargin(20);
-
-        mCardAdapter = new CardsDataAdapter(getActivity().getApplicationContext(), bodyItems);
-        mCardStack.setAdapter(mCardAdapter);
-
     }
 }
