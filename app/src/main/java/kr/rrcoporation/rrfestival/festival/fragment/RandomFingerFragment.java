@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
@@ -32,7 +33,6 @@ import kr.rrcoporation.rrfestival.festival.model.ExtraConstants;
 import kr.rrcoporation.rrfestival.festival.model.FestivalResult;
 import kr.rrcoporation.rrfestival.festival.store.MyFestivalStore;
 import kr.rrcoporation.rrfestival.festival.transaction.ApiAction;
-import kr.rrcoporation.rrfestival.festival.util.Util;
 import kr.rrcoporation.rrfestival.festival.view.CardsDataAdapter;
 import rx.Subscription;
 
@@ -133,35 +133,30 @@ public class RandomFingerFragment extends CommonFragment implements View.OnClick
     }
 
     private void settingCards() {
-        if (Util.getSharedPreference(getContext(), "FESTIVAL_LIST").equals("")) {
-            renderRandomFinger();
-        } else {
-            String festivalGsonStr = Util.getSharedPreference(getContext(), "FESTIVAL_LIST");
-            FestivalResult festivalItem = gson.fromJson(festivalGsonStr, FestivalResult.class);
-            List<BodyItem> festivals = new LinkedList<>(Arrays.asList(festivalItem.getResponse().getBody().getItems().getItem()));
-            bodyItems = new ArrayList<>();
-            mCardStack = (CardStack) rootLayout.findViewById(R.id.container);
-            mCardStack.setContentResource(R.layout.festival_detail);
-            mCardStack.setListener(this);
-            mCardStack.setListener(this);
-            mCardStack.setStackMargin(20);
+        FestivalResult festivalItem = MyFestivalStore.getInstance().getFestivalResult();
+        List<BodyItem> festivals = new LinkedList<>(Arrays.asList(festivalItem.getResponse().getBody().getItems().getItem()));
+        bodyItems = new ArrayList<>();
+        mCardStack = (CardStack) rootLayout.findViewById(R.id.container);
+        mCardStack.setContentResource(R.layout.festival_detail);
+        mCardStack.setListener(this);
+        mCardStack.setListener(this);
+        mCardStack.setStackMargin(20);
 
-            Collections.sort(festivals, new Comparator<BodyItem>() {
-                @Override
-                public int compare(BodyItem o1, BodyItem o2) {
-                    return o1.getCreatedtime().compareTo(o2.getCreatedtime());
-                }
-            });
-
-            for (BodyItem bodyItem : festivals) {
-                if (bodyItem.getFirstimage() != null) {
-                    bodyItems.add(bodyItem);
-                }
+        Collections.sort(festivals, new Comparator<BodyItem>() {
+            @Override
+            public int compare(BodyItem o1, BodyItem o2) {
+                return o1.getCreatedtime().compareTo(o2.getCreatedtime());
             }
+        });
 
-            mCardAdapter = new CardsDataAdapter(getActivity().getApplicationContext(), bodyItems);
-            mCardStack.setAdapter(mCardAdapter);
+        for (BodyItem bodyItem : festivals) {
+            if (bodyItem.getFirstimage() != null) {
+                bodyItems.add(bodyItem);
+            }
         }
+
+        mCardAdapter = new CardsDataAdapter(getActivity().getApplicationContext(), bodyItems);
+        mCardStack.setAdapter(mCardAdapter);
     }
 
     private void saveBookmark() {
