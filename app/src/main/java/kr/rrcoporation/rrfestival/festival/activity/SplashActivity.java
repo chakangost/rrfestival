@@ -10,12 +10,20 @@ import android.view.View;
 import android.view.WindowManager;
 
 import kr.rrcoporation.rrfestival.festival.R;
-import kr.rrcoporation.rrfestival.festival.util.Util;
+import kr.rrcoporation.rrfestival.festival.store.MyFestivalStore;
+import kr.rrcoporation.rrfestival.festival.transaction.ApiAction;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
 
 public class SplashActivity extends CommonFragmentActivity {
 
-    private Activity thisActivity;
+    private static final int DELAYED_TIME = 2000;
 
+    private Activity thisActivity;
+    private long startTime;
+    private long endTime;
+
+    private boolean isComplete = false;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,22 +36,42 @@ public class SplashActivity extends CommonFragmentActivity {
         }
 
         setContentView(R.layout.activity_splash);
-
-//        Animation anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.translate_anim);
-//        findViewById(R.id.splash_image).startAnimation(anim);
-
         thisActivity = this;
-        new Handler(getMainLooper()).postDelayed(new Runnable() {
+        startTime = System.currentTimeMillis();
+
+        MyFestivalStore.getInstance().observe().observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<Void>() {
+            @Override
+            public void onCompleted() {}
+
+            @Override
+            public void onError(Throwable e) {}
+
+            @Override
+            public void onNext(Void aVoid) {
+                endTime = System.currentTimeMillis();
+                if(endTime - startTime >= DELAYED_TIME) {
+                    callActivity();
+                } else {
+                    isComplete = true;
+                }
+            }
+        });
+
+        ApiAction.getInstance().fetchFestivals();
+
+        Handler handler = new Handler(getMainLooper());
+        handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-//                if (Util.getBooleanPreference(thisActivity, "autoLogin")) {
-                    startActivity(new Intent(SplashActivity.this, FragmentContainerActivity.class));
-                    finish();
-//                } else {
-//                    startActivity(new Intent(SplashActivity.this, AuthActivity.class));
-//                    finish();
-//                }
+                if(isComplete) {
+                    callActivity();
+                }
             }
-        }, 2000);
+        }, DELAYED_TIME);
+    }
+
+    private void callActivity() {
+        startActivity(new Intent(SplashActivity.this, FragmentContainerActivity.class));
+        finish();
     }
 }
