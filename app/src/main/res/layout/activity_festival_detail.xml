@@ -103,13 +103,15 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/ic_content_copy_white_18dp"
+                    android:paddingRight="5dp"
                     android:text="주소 : "/>
 
                 <TextView
                     android:id="@+id/textview_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    tool:text="test2"/>
+                    tool:text="test2\ntest3"/>
             </LinearLayout>
 
             <LinearLayout
